@@ -13,7 +13,7 @@
 #define TEMPERATURECALCULATOR_H_
 
 #include <driver/IAdcDriver.h>
-#include <util/runnable/IRunnable.h>
+#include <se-lib-c/util/runnable/IRunnable.h>
 
 /**
  * Declaration of the TemperatureCalculator handle.

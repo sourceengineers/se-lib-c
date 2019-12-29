@@ -12,8 +12,8 @@
 #ifndef MAXCHECK_H_
 #define MAXCHECK_H_
 
-#include "util/checkable/ICheckable.h"
-#include "util/runnable/IRunnable.h"
+#include <se-lib-c/util/checkable/ICheckable.h>
+#include <se-lib-c/util/runnable/IRunnable.h>
 #include <stdint.h>
 
 /**

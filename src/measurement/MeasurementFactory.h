@@ -12,7 +12,7 @@
 #ifndef MEASUREMENTFACTORY_H_
 #define MEASUREMENTFACTORY_H_
 
-#include <util/runnable/IRunnable.h>
+#include <se-lib-c/util/runnable/IRunnable.h>
 #include <driver/IAdcDriver.h>
 #include "MeasuredValues.h"
 

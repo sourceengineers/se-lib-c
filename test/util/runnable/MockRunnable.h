@@ -12,7 +12,7 @@
 #ifndef MOCKRUNNABLE_H_
 #define MOCKRUNNABLE_H_
 
-#include "util/runnable/IRunnable.h"
+#include <se-lib-c/util/runnable/IRunnable.h>
 #include <stdint.h>
 
 /**

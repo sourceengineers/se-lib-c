@@ -12,7 +12,7 @@
 #ifndef RUNNABLELIST_H_
 #define RUNNABLELIST_H_
 
-#include "util/runnable/IRunnable.h"
+#include <se-lib-c/util/runnable/IRunnable.h>
 
 /**
  * Declaration of the Template handle.

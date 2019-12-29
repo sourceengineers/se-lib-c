@@ -8,7 +8,7 @@
  * @brief        TODO
  *
  *****************************************************************************************************************************************/
-#include "Runnable.h"
+#include <se-lib-c/util/runnable/Runnable.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>

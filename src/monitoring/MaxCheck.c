@@ -8,7 +8,7 @@
  * @brief        TODO
  *
  *****************************************************************************************************************************************/
-#include "MaxCheck.h"
+#include <se-lib-c/monitoring/MaxCheck.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-    #include "util/runnable/Runnable.h"
+    #include <se-lib-c/util/runnable/Runnable.h>
 }
 
 class RunnableTest : public ::testing::Test

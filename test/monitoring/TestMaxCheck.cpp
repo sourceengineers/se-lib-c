@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-    #include "monitoring/MaxCheck.h"
+    #include <se-lib-c/monitoring/MaxCheck.h>
 }
 
 class MaxCheckTest : public ::testing::Test

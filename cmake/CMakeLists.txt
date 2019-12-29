@@ -9,6 +9,7 @@ add_subdirectory(gtest)
 
 #include directories
 include_directories(cmake-build-debug/gtest/googletest-src/googletest/include)
+include_directories(../include)
 
 #include other file
 include(UnitTestsFiles.cmake)
