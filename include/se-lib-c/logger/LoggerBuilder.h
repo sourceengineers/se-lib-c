@@ -9,14 +9,12 @@
  *
  *
  ******************************************************************************/
-
-
 #ifndef SE_SCOPE_LOGGERBUILDER_H
 #define SE_SCOPE_LOGGERBUILDER_H
 
-#include <Logger/Core/Logger.h>
-#include <Scope/Control/Controller.h>
-#endif //SE_SCOPE_LOGGERBUILDER_H
+#include <se-lib-c/logger/Logger.h>
+#include <se-lib-c/stream/IByteStream.h>
+
 
 /******************************************************************************
  Define class handle data
@@ -79,3 +77,5 @@ void LoggerBuilder_setStream(LoggerBuilderHandle self, IByteStreamHandle output)
  * @param self
  */
 void LoggerBuilder_destroy(LoggerBuilderHandle self);
+
+#endif //SE_SCOPE_LOGGERBUILDER_H

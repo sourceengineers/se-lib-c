@@ -6,17 +6,12 @@
  * @authors      Benjamin Rupp  benjamin.rupp@sourceengineers.com
  *
  *****************************************************************************************************************************************/
-
-
-#include <Logger/Core/Logger.h>
-
+#include <se-lib-c/logger/Logger.h>
+#include <se-lib-c/stream/BufferedByteStream.h>
+#include <se-lib-c/stream/BufferedIntStream.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-
-#include <Scope/GeneralPurpose/BufferedByteStream.h>
-#include <Scope/GeneralPurpose/BufferedIntStream.h>
 
 /******************************************************************************
  Define private data
@@ -112,7 +107,7 @@ ILoggerHandle Logger_getILogger(LoggerHandle self){
     return &self->logger;
 }
 
-static void Logger_log(LoggerHandle self, SEVERITY severity, const char* msg ) {
+void Logger_log(LoggerHandle self, SEVERITY severity, const char* msg ) {
     IByteStreamHandle streamLogMsg = BufferedByteStream_getIByteStream(self->streamLogMsg);
 
     self->severity = severity;

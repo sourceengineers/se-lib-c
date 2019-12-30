@@ -12,10 +12,8 @@
 #ifndef INTRINGBUFFER_H_
 #define INTRINGBUFFER_H_
 
-#include "Scope/GeneralPurpose/DataTypes.h"
-
-#include "Scope/GeneralPurpose/IIntStream.h"
-
+#include <se-lib-c/definition/SeLibCTypes.h>
+#include <se-lib-c/stream/IIntStream.h>
 #include <stddef.h>
 #include <stdint.h>
 

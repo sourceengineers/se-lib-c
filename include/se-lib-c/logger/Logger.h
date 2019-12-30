@@ -13,10 +13,9 @@
 #ifndef SE_SCOPE_LOGGER_H
 #define SE_SCOPE_LOGGER_H
 
-#include <Logger/Core/ILogger.h>
-#include <Scope/GeneralPurpose/IObserver.h>
+#include <se-lib-c/logger/ILogger.h>
+#include <se-lib-c/util/observer/IObserver.h>
 #include <time.h>
-#endif //SE_SCOPE_LOGGER_H
 
 /******************************************************************************
  Define class handle data
@@ -38,8 +37,7 @@ LoggerHandle Logger_create(size_t bufferSize);
  * @param self
  * @return
  */
-
-static void Logger_log(LoggerHandle self, SEVERITY severity, const char* msg );
+void Logger_log(LoggerHandle self, SEVERITY severity, const char* msg );
 
 /**
  * Returns the ILogger interface
@@ -88,3 +86,5 @@ size_t Logger_calculateBufferSize();
  * @return
  */
  void LoggerDestroy(LoggerHandle self);
+
+#endif //SE_SCOPE_LOGGER_H

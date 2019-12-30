@@ -2,7 +2,7 @@
 
 extern "C" {
     #include <se-lib-c/util/runnable/RunnableList.h>
-    #include <se-lib-c/util/runnable//Runnable.h>
+    #include <util/runnable/MockRunnable.h>
 }
 
 class RunnableListTest : public ::testing::Test
@@ -36,28 +36,24 @@ TEST_F(RunnableListTest, RunnableListAddAndRunElements)
     EXPECT_NE(nullptr, _runnableList);
 
     // add first runnable
-    Runnable_Handle runnable1 = Runnable_create();
-    EXPECT_NE(nullptr, runnable1);
-    RunnableList_add(_runnableList,Runnable_getIRunnableInterface(runnable1));
+    MockRunnable runnable1;
+    MockRunnable_init(&runnable1);
+    RunnableList_add(_runnableList,MockRunnable_getIRunnableInterface(&runnable1));
 
     // add second runnable
-    Runnable_Handle runnable2 = Runnable_create();
-    EXPECT_NE(nullptr, runnable2);
-    RunnableList_add(_runnableList,Runnable_getIRunnableInterface(runnable2));
+    MockRunnable runnable2;
+    MockRunnable_init(&runnable2);
+    RunnableList_add(_runnableList,MockRunnable_getIRunnableInterface(&runnable2));
 
     IRunnable*  iRunnable = RunnableList_getIRunnableInterface(_runnableList);
 
     // run and check both runnable are run
-    iRunnable->run(iRunnable->handle);
-    EXPECT_EQ(1,Runnable_getCallCountOfRun(runnable1));
-    EXPECT_EQ(1,Runnable_getCallCountOfRun(runnable2));
+    iRunnable->run(iRunnable);
+    EXPECT_EQ(1,runnable1.callCountOfRun);
+    EXPECT_EQ(1,runnable2.callCountOfRun);
 
-    iRunnable->run(iRunnable->handle);
-    EXPECT_EQ(2,Runnable_getCallCountOfRun(runnable1));
-    EXPECT_EQ(2,Runnable_getCallCountOfRun(runnable2));
-
-    //clean up
-    Runnable_destroy(runnable1);
-    Runnable_destroy(runnable2);
+    iRunnable->run(iRunnable);
+    EXPECT_EQ(2,runnable1.callCountOfRun);
+    EXPECT_EQ(2,runnable2.callCountOfRun);
 
 }

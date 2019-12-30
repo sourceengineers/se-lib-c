@@ -11,23 +11,33 @@ include_directories(
 )
 
 # Add sourcecode
-set(OOP_EXAMPLES_SOURCES
-	${SRC_ROOT}/driver/AdcDriver.c
-	${SRC_ROOT}/measurement/TemperatureCalculator.c
-	${SRC_ROOT}/measurement/MeasurementFactory.c
-	${SRC_ROOT}/util/runnable/Runnable.c
-	${SRC_ROOT}/util/runnable/RunnableList.c
-	${SRC_ROOT}/monitoring/MaxCheck.c
-    ${TEST_ROOT}/util/runnable/MockRunnable.c
+set(SE_LIB_C_SOURCES
+		${SRC_ROOT}/container/ByteRingBuffer.c
+		${SRC_ROOT}/container/FloatRingBuffer.c
+		${SRC_ROOT}/container/IntRingBuffer.c
+		${SRC_ROOT}/logger/Logger.c
+		${SRC_ROOT}/logger/LoggerBuilder.c
+		${SRC_ROOT}/monitoring/MaxCheck.c
+		${SRC_ROOT}/monitoring/MinCheck.c
+		${SRC_ROOT}/stream/BufferedByteStream.c
+		${SRC_ROOT}/stream/BufferedFloatStream.c
+		${SRC_ROOT}/stream/BufferedIntStream.c
+		${SRC_ROOT}/util/runnable/RunnableList.c
+)
+
+# Add mocks
+set(SE_LIB_C_MOCKS
+	${TEST_ROOT}/util/runnable/MockRunnable.c
 	${TEST_ROOT}/driver/MockAdcDriver.c
 )
 
 # Add tests
-set(OOP_EXAMPLES_UNIT_TESTS
-	${TEST_ROOT}/util/runnable/TestRunnable.cpp
-	${TEST_ROOT}/util/runnable/TestRunnableList.cpp
-	${TEST_ROOT}/monitoring/TestMaxCheck.cpp
-	${TEST_ROOT}/measurement/TestTemperatureCalculator.cpp
-	${TEST_ROOT}/measurement/TestMeasurement.cpp
+set(SE_LIB_C_UNIT_TESTS
+		${TEST_ROOT}/container/FloatRingBuffer-test.cpp
+		${TEST_ROOT}/logger/LoggerFactory-test.cpp
+		${TEST_ROOT}/monitoring/TestMaxCheck.cpp
+		${TEST_ROOT}/monitoring/TestMinCheck.cpp
+		${TEST_ROOT}/stream/Bytestream-test.cpp
+		${TEST_ROOT}/util/runnable/TestRunnableList.cpp
 )
 

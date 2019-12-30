@@ -14,10 +14,8 @@
 #ifndef INTSTREAM_H_
 #define INTSTREAM_H_
 
-#include "Scope/GeneralPurpose/DataTypes.h"
-
-#include "Scope/GeneralPurpose/IIntStream.h"
-
+#include <se-lib-c/definition/SeLibCTypes.h>
+#include <se-lib-c/stream/IIntStream.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>

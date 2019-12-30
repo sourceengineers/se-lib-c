@@ -12,10 +12,8 @@
 #ifndef FLOATRINGBUFFER_H_
 #define FLOATRINGBUFFER_H_
 
-#include "Scope/GeneralPurpose/DataTypes.h"
-
-#include "Scope/GeneralPurpose/IFloatStream.h"
-
+#include <se-lib-c/definition/SeLibCTypes.h>
+#include <se-lib-c/stream/IFloatStream.h>
 #include <stddef.h>
 
 /******************************************************************************

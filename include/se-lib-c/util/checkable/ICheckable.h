@@ -12,19 +12,19 @@
 #ifndef ICHECKABLE_H_
 #define ICHECKABLE_H_
 
-#include <stdbool.h>
+#include <se-lib-c/definition/SeLibCTypes.h>
 
 // Declare the handle to the interface
-typedef void* ICheckable_Handle;
+typedef struct __ICheckable* ICheckableHandle;
 
 // Declares the methods of the interface
-typedef void (*ICheckable_setActive)(ICheckable_Handle handle, bool isActive);
-typedef bool (*ICheckable_isCheckOk)(ICheckable_Handle handle);
+typedef void (*ICheckable_setActive)(ICheckableHandle handle, bool isActive);
+typedef bool (*ICheckable_isCheckOk)(ICheckableHandle handle);
 
 // Declare the interface
 typedef struct __ICheckable
 {
-    ICheckable_Handle handle;
+    GenericReference handle;
     ICheckable_setActive setActive;
     ICheckable_isCheckOk isCheckOk;
 } ICheckable;

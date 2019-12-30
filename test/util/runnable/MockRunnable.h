@@ -22,18 +22,19 @@ typedef struct __MockRunnablePrivateData
 {
 	IRunnable parent;
 	uint16_t callCountOfRun;
-} MockRunnablePrivateData;
+	bool isRunSuccess;
+} MockRunnable;
 
 
 /**
  * initialize a MockRunnable instance.
  */
-void MockRunnable_init(MockRunnablePrivateData* me);
+void MockRunnable_init(MockRunnable* me);
 
 /**
  * Returns a pointer to the IRunnable.
  */ 
-IRunnable* MockRunnable_getIRunnableInterface(MockRunnablePrivateData* me);
+IRunnable* MockRunnable_getIRunnableInterface(MockRunnable* me);
 
 
 #endif // MOCKRUNNABLE_H_

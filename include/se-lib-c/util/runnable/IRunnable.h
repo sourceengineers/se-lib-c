@@ -1,28 +1,36 @@
-/*!****************************************************************************************************************************************
+/*!*****************************************************************************
  * @file         IRunnable.h
  *
- * @copyright    © by Source Engineers GmbH, 2019
+ * @copyright    Copyright (c) 2018 by Sourceengineers. All Rights Reserved.
  *
- * @authors      Flurin Bühler <flurin.buehler@sourceengineers.com>
+ * @authors      Samuel Schuepbach samuel.schuepbach@sourceengineers.com
  *
- * @brief        TODO
- * 
- *****************************************************************************************************************************************/
+ * @brief        Interface to be implemented if a runnable should be used
+ *
+ ******************************************************************************/
 
 #ifndef IRUNNABLE_H_
 #define IRUNNABLE_H_
 
-// Declare the handle to the interface (void* because type of derived class is not known)
-typedef void* IRunnable_Handle;
+#include <se-lib-c/definition/SeLibCTypes.h>
 
-// Declares the methods of the interface
-typedef void (*IRunnable_run)(IRunnable_Handle handle);
+/******************************************************************************
+ Define interface handle data
+******************************************************************************/
+typedef struct IRunnableStruct* IRunnableHandle;
 
-// Declare the interface
-typedef struct __IRunnable
-{
-    IRunnable_Handle handle;       // the explicit 'this' pointer
-    IRunnable_run run; // pointer to function implementation
+/******************************************************************************
+ Define interface
+******************************************************************************/
+typedef struct IRunnableStruct{
+    GenericReference handle;
+
+    /**
+     * Runs the class which implemented the runnable
+     * @param runnable
+     */
+    bool (* run)(IRunnableHandle runnable);
+
 } IRunnable;
 
-#endif //IRUNNABLE_H_
+#endif

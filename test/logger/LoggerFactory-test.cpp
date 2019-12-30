@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-#include <Logger/Builders/LoggerBuilder.h>
+#include <se-lib-c/logger/LoggerBuilder.h>
+#include <se-lib-c/stream/BufferedByteStream.h>
 }
 
 using namespace testing;

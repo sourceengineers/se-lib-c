@@ -14,10 +14,8 @@
 #ifndef FLOATSTREAM_H_
 #define FLOATSTREAM_H_
 
-#include "Scope/GeneralPurpose/DataTypes.h"
-
-#include "Scope/GeneralPurpose/IFloatStream.h"
-
+#include <se-lib-c/definition/SeLibCTypes.h>
+#include <se-lib-c/stream/IFloatStream.h>
 #include <stdbool.h>
 #include <stddef.h>
 

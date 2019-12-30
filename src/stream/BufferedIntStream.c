@@ -7,9 +7,9 @@
  *
  *****************************************************************************************************************************************/
 
-#include "Scope/GeneralPurpose/BufferedIntStream.h"
-#include "Scope/GeneralPurpose/IntRingBuffer.h"
-#include "Scope/GeneralPurpose/IIntStream.h"
+#include <se-lib-c/stream/BufferedIntStream.h>
+#include <se-lib-c/container/IntRingBuffer.h>
+#include <se-lib-c/stream/IIntStream.h>
 
 #include <stdlib.h>
 #include <assert.h>

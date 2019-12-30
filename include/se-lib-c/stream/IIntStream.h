@@ -12,7 +12,7 @@
 #ifndef IINTSTREAM_H_
 #define IINTSTREAM_H_
 
-#include "Scope/GeneralPurpose/DataTypes.h"
+#include <se-lib-c/definition/SeLibCTypes.h>
 
 /******************************************************************************
  Define interface handle data

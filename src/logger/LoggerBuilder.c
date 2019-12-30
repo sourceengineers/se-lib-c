@@ -6,10 +6,7 @@
  * @authors      Benjamin Rupp  benjamin.rupp@sourceengineers.com
  *
  *****************************************************************************************************************************************/
-
-
-
-#include <Logger/Builders/LoggerBuilder.h>
+#include <se-lib-c/logger/LoggerBuilder.h>
 #include <stdlib.h>
 
 /******************************************************************************

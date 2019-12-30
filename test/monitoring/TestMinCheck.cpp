@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-    #include <se-lib-c/monitoring/MaxCheck.h>
+    #include <se-lib-c/monitoring/MinCheck.h>
 }
 
-class MaxCheckTest : public ::testing::Test
+class MinCheckTest : public ::testing::Test
 {
 protected:
-    MaxCheckTest()
+    MinCheckTest()
         : Test()
     {
     }
@@ -19,43 +19,43 @@ protected:
         float tripLimit = 100.0f;
         uint16_t  tripTimeMs = 100;
         uint16_t  callInvervallMs = 10;
-        _maxCheck = MaxCheck_create(&_valueToCheck,tripLimit,tripTimeMs,callInvervallMs);
-        _checkable = MaxCheck_getICheckableInterface(_maxCheck);
-        _runnable = MaxCheck_getIRunnableInterface(_maxCheck);
+        _minCheck = MinCheck_create(&_valueToCheck,tripLimit,tripTimeMs,callInvervallMs);
+        _checkable = MinCheck_getICheckableInterface(_minCheck);
+        _runnable = MinCheck_getIRunnableInterface(_minCheck);
 
     }
 
     void TearDown() override
     {
-    	MaxCheck_destroy(_maxCheck);
+    	MinCheck_destroy(_minCheck);
     }
 
-    virtual ~MaxCheckTest()
+    virtual ~MinCheckTest()
     {
     }
 
-    MaxCheck_Handle _maxCheck;
+    MinCheck_Handle _minCheck;
     float _valueToCheck;
     ICheckable* _checkable;
     IRunnable* _runnable;
 };
 
-TEST_F(MaxCheckTest, MaxCheckCreated)
+TEST_F(MinCheckTest, MinCheckCreated)
 {
 	// test that the MaxCheck was created
-    EXPECT_NE(nullptr, _maxCheck);
+    EXPECT_NE(nullptr, _minCheck);
     EXPECT_NE(nullptr, _runnable);
     EXPECT_NE(nullptr, _checkable);
 }
 
-TEST_F(MaxCheckTest, ActivatedMaxCheckOperation)
+TEST_F(MinCheckTest, ActivatedMinCheckOperation)
 {
-    EXPECT_NE(nullptr, _maxCheck);
+    EXPECT_NE(nullptr, _minCheck);
     EXPECT_NE(nullptr, _runnable);
     EXPECT_NE(nullptr, _checkable);
 
     // set value above maximum
-    _valueToCheck = 100.1f;
+    _valueToCheck = 99.9f;
 
     // activate check
     _checkable->setActive(_checkable,true);
@@ -71,21 +71,21 @@ TEST_F(MaxCheckTest, ActivatedMaxCheckOperation)
     _runnable->run(_runnable);
     EXPECT_EQ(false,_checkable->isCheckOk(_checkable));
 
-    // if value drops to trip-limit the check must be ok again
+    // if value rises to trip-limit the check must be ok again
     _valueToCheck = 100.0f;
     _runnable->run(_runnable);
     EXPECT_EQ(true,_checkable->isCheckOk(_checkable));
 
 }
 
-TEST_F(MaxCheckTest, InactiveMaxCheckOperation)
+TEST_F(MinCheckTest, InactiveMinCheckOperation)
 {
-    EXPECT_NE(nullptr, _maxCheck);
+    EXPECT_NE(nullptr, _minCheck);
     EXPECT_NE(nullptr, _runnable);
     EXPECT_NE(nullptr, _checkable);
 
     // set value above maximum
-    _valueToCheck = 100.1f;
+    _valueToCheck = 99.9f;
 
     // activate check
     _checkable->setActive(_checkable,false);

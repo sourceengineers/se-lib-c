@@ -9,6 +9,7 @@ add_subdirectory(gtest)
 
 #include directories
 include_directories(cmake-build-debug/gtest/googletest-src/googletest/include)
+include_directories(cmake-build-debug/gtest/googletest-src/googlemock/include)
 include_directories(../include)
 
 #include other file
@@ -23,15 +24,19 @@ set(CMAKE_C_STANDARD 99)
 SET(CMAKE_C_FLAGS "-g -O0 -Wall -W")
 
 # compile sources into object libary
-add_library(SeLibCSourceLib OBJECT ${OOP_EXAMPLES_SOURCES})
+add_library(SeLibCSourceLib OBJECT ${SE_LIB_C_SOURCES})
+
+# compile mocks into object libary
+add_library(SeLibCMocksLib OBJECT ${SE_LIB_C_MOCKS})
 
 # compile tests into object libary
-add_library(SeLibCTestLib OBJECT ${OOP_EXAMPLES_UNIT_TESTS})
+add_library(SeLibCTestLib OBJECT ${SE_LIB_C_UNIT_TESTS})
 
 # compile object library and unit-test into application
 add_executable(SeLibCUnitTests
-	../src/UnitTests.cpp
+	../test/UnitTests.cpp
 	$<TARGET_OBJECTS:SeLibCSourceLib>
+	$<TARGET_OBJECTS:SeLibCMocksLib>
 	$<TARGET_OBJECTS:SeLibCTestLib>
 	)
 

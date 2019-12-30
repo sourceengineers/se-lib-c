@@ -33,7 +33,7 @@ typedef struct RunnableList_PrivateData
  * The implementation of the Parent methods.
  * @{
  */ 
-static void run(IRunnable_Handle handle);
+static void run(IRunnableHandle handle);
 /** @} */
 
 
@@ -103,9 +103,9 @@ void RunnableList_add(RunnableList_Handle me, IRunnable* runnable)
 }
 
 
-static void run(IRunnable_Handle handle)
+static void run(IRunnableHandle handle)
 {
-    PrivateData* me = (PrivateData*)handle;
+    PrivateData* me = (PrivateData*)handle->handle;
     assert(me != NULL);
 
     RunnableListElement_Handle element = me->first;

@@ -12,8 +12,8 @@
 #ifndef BYTERINGBUFFER_H_
 #define BYTERINGBUFFER_H_
 
-#include "Scope/GeneralPurpose/DataTypes.h"
-#include "Scope/GeneralPurpose/IByteStream.h"
+#include <se-lib-c/definition/SeLibCTypes.h>
+#include <se-lib-c/stream/IByteStream.h>
 
 #include <stddef.h>
 #include <stdint.h>

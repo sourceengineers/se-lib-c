@@ -12,7 +12,7 @@
 #ifndef IOBSERVER_H
 #define IOBSERVER_H
 
-#include "Scope/GeneralPurpose/DataTypes.h"
+#include <se-lib-c/definition/SeLibCTypes.h>
 
 /******************************************************************************
  Define interface handle data

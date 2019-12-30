@@ -18,11 +18,11 @@
  * The implementation of the Parent methods.
  * @{
  */ 
-static void run(IRunnable_Handle handle);
+static bool run(IRunnableHandle handle);
 /** @} */
 
 
-void MockRunnable_init(MockRunnablePrivateData* me)
+void MockRunnable_init(MockRunnable* me)
 {
     // initialize interface
     me->parent.handle = me;
@@ -30,18 +30,20 @@ void MockRunnable_init(MockRunnablePrivateData* me)
 
     // initialize private variables
     me->callCountOfRun = 0;
+    me->isRunSuccess = true;
 }
 
-IRunnable* MockRunnable_getIRunnableInterface(MockRunnablePrivateData* me)
+IRunnable* MockRunnable_getIRunnableInterface(MockRunnable* me)
 {
     assert(me != NULL);
     return &me->parent;
 }
 
 
-static void run(IRunnable_Handle handle)
+static bool run(IRunnableHandle handle)
 {
-    MockRunnablePrivateData* me = (MockRunnablePrivateData*)handle;
+    MockRunnable* me = (MockRunnable*)handle->handle;
     assert(me != NULL);
     me->callCountOfRun++;
+    return me->isRunSuccess;
 }

@@ -1,5 +1,5 @@
 /*!****************************************************************************************************************************************
- * @file         MaxCheck.c
+ * @file         MinCheck.c
  *
  * @copyright    © by Source Engineers GmbH, 2019
  *
@@ -8,23 +8,23 @@
  * @brief        TODO
  *
  *****************************************************************************************************************************************/
-#include <se-lib-c/monitoring/MaxCheck.h>
+#include <se-lib-c/monitoring/MinCheck.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
 
 
-typedef struct MaxCheck_PrivateData
+typedef struct MinCheck_PrivateData
 {
-	ICheckable checkable;
-	IRunnable runnable;
+    ICheckable checkable;
+    IRunnable runnable;
     float * valueToCheck;
     float tripLimit;
     uint16_t tripTimeMs;
     uint16_t callIntvervallMs;
     uint16_t timeAboveLimitMs;
-	bool isActive;
-	bool isCheckOk;
+    bool isActive;
+    bool isCheckOk;
 } PrivateData;
 
 
@@ -44,7 +44,7 @@ static bool run(IRunnableHandle handle);
 /** @} */
 
 
-MaxCheck_Handle MaxCheck_create(float* valueToCheck, float tripLimit, uint16_t tripTimeMs, uint16_t callIntvervallMs)
+MinCheck_Handle MinCheck_create(float* valueToCheck, float tripLimit, uint16_t tripTimeMs, uint16_t callIntvervallMs)
 {
     PrivateData* me = malloc(sizeof(PrivateData));
     assert(me != NULL);
@@ -70,19 +70,19 @@ MaxCheck_Handle MaxCheck_create(float* valueToCheck, float tripLimit, uint16_t t
     return me;
 }
 
-void MaxCheck_destroy(MaxCheck_Handle me)
+void MinCheck_destroy(MinCheck_Handle me)
 {
     free(me);
 }
 
 
-ICheckable* MaxCheck_getICheckableInterface(MaxCheck_Handle me)
+ICheckable* MinCheck_getICheckableInterface(MinCheck_Handle me)
 {
     assert(me != NULL);
     return &me->checkable;
 }
 
-IRunnable* MaxCheck_getIRunnableInterface(MaxCheck_Handle me)
+IRunnable* MinCheck_getIRunnableInterface(MinCheck_Handle me)
 {
     assert(me != NULL);
     return &me->runnable;
@@ -90,7 +90,7 @@ IRunnable* MaxCheck_getIRunnableInterface(MaxCheck_Handle me)
 
 static void setActive(ICheckableHandle handle, bool isActive)
 {
-    PrivateData* me = (PrivateData*)handle->handle;
+    PrivateData* me = (PrivateData*)handle;
     assert(me != NULL);
     me->isActive = isActive;
 }
@@ -110,7 +110,7 @@ static bool run(IRunnableHandle handle)
     if(me->isActive)
     {
         float value = *me->valueToCheck;
-        if(value > me->tripLimit)
+        if(value < me->tripLimit)
         {
             me->timeAboveLimitMs += me->callIntvervallMs;
         }

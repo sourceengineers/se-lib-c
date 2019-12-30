@@ -14,9 +14,8 @@
 #ifndef BYTESTREAM_H_
 #define BYTESTREAM_H_
 
-#include "Scope/GeneralPurpose/DataTypes.h"
-#include "Scope/GeneralPurpose/IByteStream.h"
-
+#include <se-lib-c/definition/SeLibCTypes.h>
+#include <se-lib-c/stream/IByteStream.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
