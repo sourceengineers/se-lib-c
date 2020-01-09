@@ -13,6 +13,7 @@
 #define ICHECKABLE_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
+#include <stdbool.h>
 
 // Declare the handle to the interface
 typedef struct __ICheckable* ICheckableHandle;
@@ -24,7 +25,7 @@ typedef bool (*ICheckable_isCheckOk)(ICheckableHandle handle);
 // Declare the interface
 typedef struct __ICheckable
 {
-    GenericReference handle;
+    SeLibGenericReferece handle;
     ICheckable_setActive setActive;
     ICheckable_isCheckOk isCheckOk;
 } ICheckable;

@@ -23,7 +23,7 @@ typedef enum severity {INFO, DEBUG, WARNING, ERROR} SEVERITY;
  Define interface
 ******************************************************************************/
 typedef struct ILoggerStruct{
-    GenericReference handle;
+    SeLibGenericReferece handle;
 
     /**
      * Adds log messages to the buffer

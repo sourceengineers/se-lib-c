@@ -15,7 +15,8 @@
 
 #include <se-lib-c/logger/ILogger.h>
 #include <se-lib-c/util/observer/IObserver.h>
-#include <time.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 /******************************************************************************
  Define class handle data
