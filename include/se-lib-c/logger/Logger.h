@@ -31,7 +31,7 @@ typedef struct __LoggerPrivateData* LoggerHandle;
  * @param 
  * @return
  */
-LoggerHandle Logger_create(size_t bufferSize);
+LoggerHandle SeLogger_create(size_t bufferSize);
 
 /**
  * Log of messages

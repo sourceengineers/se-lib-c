@@ -16,7 +16,7 @@
 /******************************************************************************
  Define private data
 ******************************************************************************/
-char* strSeverity[4] = {"INFO","DEBUG", "WARNING", "ERROR"};
+char* strSeverity[4] = {"SE_SCOPE_INFO","SE_SCOPE_DEBUG", "SE_SCOPE_WARNING", "SE_SCOPE_ERROR"};
 
 typedef struct __LoggerPrivateData{
     /* Inherit  */
@@ -84,7 +84,7 @@ bool loggerStreamLogMessage(IByteStreamHandle stream,LoggerHandle self){
 /******************************************************************************
  Public functions
 ******************************************************************************/
-LoggerHandle Logger_create(size_t bufferSize){
+LoggerHandle SeLogger_create(size_t bufferSize){
 
     LoggerHandle self = malloc(sizeof(LoggerPrivateData));
     self->logMessage = malloc(bufferSize);
@@ -111,7 +111,7 @@ void Logger_log(LoggerHandle self, SEVERITY severity, const char* msg ) {
     IByteStreamHandle streamLogMsg = BufferedByteStream_getIByteStream(self->streamLogMsg);
 
     self->severity = severity;
-    self->timestamp = time(NULL);
+    //self->timestamp = time(NULL);
 
     if (self->logMessage != NULL) {
         if (strlen(msg) < self->bufferSize) {

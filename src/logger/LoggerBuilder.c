@@ -43,7 +43,7 @@ LoggerObject LoggerBuilder_build(LoggerBuilderHandle self){
 
     LoggerObject obj;
 
-    self->logger = Logger_create( self->bufferSize );
+    self->logger = SeLogger_create( self->bufferSize );
 
     obj.logger = Logger_getILogger(self->logger);
 
