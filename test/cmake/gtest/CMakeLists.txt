@@ -2,11 +2,6 @@ cmake_minimum_required (VERSION 3.5)
 
 project (GoogleTest)
 
-add_definitions(-DUNIT_TEST)
-
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_C_STANDARD 99)
-
 # googletest: download and build at configuration time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
