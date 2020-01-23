@@ -19,7 +19,7 @@ set(SE_LIB_C_VERSION
 # Sources and files
 ################################################################################
 set(SE_LIB_C_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(SE_LIB_SOURCES_IN cmake/SeLibCSources.cmake.in)
+set(SE_LIB_SOURCES_IN cmake/SeLibCSources.cmake)
 set(SE_LIB_CONFIG_IN cmake/SeLibCConfig.cmake.in)
 set(SE_LIB_CONFIG_VERSION_IN cmake/SeLibCConfigVersion.cmake.in)
 #Add the library sources
@@ -43,23 +43,21 @@ target_include_directories(
 ################################################################################
 # Add testing if enabled
 ################################################################################
-if(SE_LIB_C_BUILD_TESTS)
-	enable_testing()
-	set(SE_LIB_C_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
-	add_subdirectory(test)
-endif()
-
-################################################################################
-# Install the library and headers
-################################################################################
-install(TARGETS ${SE_LIB_C} EXPORT ${SE_LIB_C} ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT library)
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include" DESTINATION "${CMAKE_INSTALL_PREFIX}")
+enable_testing()
+set(SE_LIB_C_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
+add_subdirectory(test EXCLUDE_FROM_ALL)
 
 ################################################################################
 # Export the target
 ################################################################################
 export(TARGETS ${SE_LIB_C} NAMESPACE SeLibC:: FILE "${PROJECT_BINARY_DIR}/SeLibCTargets.cmake")
 export(PACKAGE ${SE_LIB_C})
+
+################################################################################
+# Install the library and headers
+################################################################################
+install(TARGETS ${SE_LIB_C} EXPORT SeLibCTargets ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT library)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include" DESTINATION "${CMAKE_INSTALL_PREFIX}")
 
 ################################################################################
 # Generate the configuration
@@ -77,4 +75,4 @@ install(FILES
 		"${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SeLibCConfig.cmake"
 		"${PROJECT_BINARY_DIR}/SeLibCConfigVersion.cmake"
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/SeLibC COMPONENT dev)
-install(EXPORT ${SE_LIB_C} DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT dev)
+install(EXPORT SeLibCTargets DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SeLibC" COMPONENT dev)

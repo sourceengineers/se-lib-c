@@ -16,15 +16,17 @@ add_executable(${SE_LIB_C_TEST}
         ${SE_LIB_C_MOCKS}
         )
 
-message(${CMAKE_CURRENT_BINARY_DIR}/test/cmake/gtest/googletest-src/googletest/include)
-target_include_directories(${SE_LIB_C_TEST} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/cmake/gtest/googletest-src/googletest/include)
-target_include_directories(${SE_LIB_C_TEST} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/cmake/gtest/googletest-src/googlemock/include)
+target_include_directories(${SE_LIB_C_TEST} PRIVATE ${gmock_SOURCE_DIR}/include)
+target_include_directories(${SE_LIB_C_TEST} PRIVATE ${gmock_SOURCE_DIR})
+target_include_directories(${SE_LIB_C_TEST} PRIVATE ${gtest_SOURCE_DIR}/include)
+target_include_directories(${SE_LIB_C_TEST} PRIVATE ${gtest_SOURCE_DIR})
 target_include_directories(${SE_LIB_C_TEST} PRIVATE ../include)
 target_include_directories(${SE_LIB_C_TEST} PRIVATE .)
 
 target_link_libraries(
         ${SE_LIB_C_TEST}
         PRIVATE
-        se-scope
+        ${SE_LIB_C}
+        gtest
         gtest_main
         pthread)
