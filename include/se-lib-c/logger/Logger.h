@@ -37,6 +37,7 @@ LoggerHandle Logger_create(size_t bufferSize);
  * @param self
  * @return
  */
+ // TODO check if this is needed? I think it would be better to make this function private to avoid direct access
 void Logger_log(LoggerHandle self, SEVERITY severity, const char* msg );
 
 /**
@@ -50,6 +51,7 @@ ILoggerHandle Logger_getILogger(LoggerHandle self);
  * Reallocates more memory in case there is a long string
  * @param mem
  */
+// TODO check if this is needed?
 bool Logger_reallocateMemory(LoggerHandle  self, size_t mem);
 
 /**
@@ -57,6 +59,7 @@ bool Logger_reallocateMemory(LoggerHandle  self, size_t mem);
  * @param self
  * @return char*
  */
+// TODO check if this is needed?
 char* Logger_getBuffer(LoggerHandle self);
 
 /**
@@ -64,6 +67,7 @@ char* Logger_getBuffer(LoggerHandle self);
  * @param self
  * @return char*
  */
+// TODO check if this is needed?
 char* Logger_getBufferedByteStream(LoggerHandle self);
 
 /**
@@ -71,6 +75,7 @@ char* Logger_getBufferedByteStream(LoggerHandle self);
  * @param self
  * @param observer
  */
+// TODO check if this is needed?
 void Logger_attachBufferObserver(LoggerHandle self, IObserverHandle observer);
 
 /**
@@ -78,6 +83,7 @@ void Logger_attachBufferObserver(LoggerHandle self, IObserverHandle observer);
  * @param
  * @param calculated buffer size
  */
+// TODO check if this is needed?
 size_t Logger_calculateBufferSize();
 
 /**

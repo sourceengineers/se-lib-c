@@ -20,20 +20,21 @@ char* strSeverity[4] = {"INFO","DEBUG", "WARNING", "ERROR"};
 
 typedef struct __LoggerPrivateData{
     /* Inherit  */
+    // TODO rename to base
     ILogger logger;
 
-    /* Class Data */
-    size_t bufferSize;
-    SEVERITY severity;
-    char* logMessage;
-    time_t timestamp;
-    size_t streamBufferSize;
+    // data to store current message
+    char* logMessage; // message with severity as text
+    size_t bufferSize; // TODO rename to logMessageSize
 
+    // stream to store formatted message
     BufferedByteStreamHandle streamLogMsg;
-    char* stream;
 
-
-    IObserverHandle observer;
+    SEVERITY severity; // TODO remove this
+    time_t timestamp; // TODO remove timestamp
+    size_t streamBufferSize; // TODO remove?
+    char* stream; // TODO remove
+    IObserverHandle observer; // TODO remove
 } LoggerPrivateData;
 
 static void loggerLog(ILoggerHandle logger, SEVERITY severity, const char* msg);
@@ -61,6 +62,7 @@ bool loggerStreamLogMessage(IByteStreamHandle stream,LoggerHandle self){
 
     char* info;
 
+    // TODO move to previous function
     info = loggerPrepareSeverity(self->severity);
 
     if (strlen(self->logMessage)+strlen(info) + 2 < (capacity - length)){
@@ -87,16 +89,17 @@ bool loggerStreamLogMessage(IByteStreamHandle stream,LoggerHandle self){
 LoggerHandle Logger_create(size_t bufferSize){
 
     LoggerHandle self = malloc(sizeof(LoggerPrivateData));
+
+    // TODO rename to logBuffer
     self->logMessage = malloc(bufferSize);
-
-
     self->bufferSize = bufferSize;
+
+    // TODO analyze what this is doing. can we move this into a different class?
     self->streamBufferSize = Logger_calculateBufferSize();
     self->stream = malloc(self->streamBufferSize);
     self->streamLogMsg = BufferedByteStream_create(self->streamBufferSize);
 
-
-
+    // setup the base-class (ILog interface)
     self->logger.handle = self;
     self->logger.log = &loggerLog;
 
@@ -110,18 +113,24 @@ ILoggerHandle Logger_getILogger(LoggerHandle self){
 void Logger_log(LoggerHandle self, SEVERITY severity, const char* msg ) {
     IByteStreamHandle streamLogMsg = BufferedByteStream_getIByteStream(self->streamLogMsg);
 
+    // TODO remove
     self->severity = severity;
+    // TODO remove
     self->timestamp = time(NULL);
 
     if (self->logMessage != NULL) {
         if (strlen(msg) < self->bufferSize) {
+            // TODO add string for severity to message
             strcpy(self->logMessage, msg);
-        } else {
+        }
+        // TODO remove handling of long messages, just cut message after max-number of bytes
+        else {
             if (Logger_reallocateMemory(self, strlen(msg))) {
                 strcpy(self->logMessage, msg);
             }
         }
     }
+    // TODO remove success, can not be used
     bool success = loggerStreamLogMessage(streamLogMsg,self);
 }
 
@@ -130,6 +139,7 @@ char* Logger_getBuffer(LoggerHandle self){
     return self->logMessage;
 }
 
+// TODO just return IByteStreamhandle here and remove the rest
 char* Logger_getBufferedByteStream(LoggerHandle self){
     IByteStreamHandle buffer;
     buffer = BufferedByteStream_getIByteStream(self->streamLogMsg);

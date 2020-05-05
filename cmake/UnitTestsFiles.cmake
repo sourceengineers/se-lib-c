@@ -16,7 +16,7 @@ set(SE_LIB_C_SOURCES
 		${SRC_ROOT}/container/FloatRingBuffer.c
 		${SRC_ROOT}/container/IntRingBuffer.c
 		${SRC_ROOT}/logger/Logger.c
-		${SRC_ROOT}/logger/LoggerBuilder.c
+		#${SRC_ROOT}/logger/LoggerBuilder.c
 		${SRC_ROOT}/monitoring/MaxCheck.c
 		${SRC_ROOT}/monitoring/MinCheck.c
 		${SRC_ROOT}/stream/BufferedByteStream.c
@@ -34,7 +34,7 @@ set(SE_LIB_C_MOCKS
 # Add tests
 set(SE_LIB_C_UNIT_TESTS
 		${TEST_ROOT}/container/FloatRingBuffer-test.cpp
-		${TEST_ROOT}/logger/LoggerFactory-test.cpp
+		#${TEST_ROOT}/logger/LoggerFactory-test.cpp
 		${TEST_ROOT}/monitoring/TestMaxCheck.cpp
 		${TEST_ROOT}/monitoring/TestMinCheck.cpp
 		${TEST_ROOT}/stream/Bytestream-test.cpp
