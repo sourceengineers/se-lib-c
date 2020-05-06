@@ -47,7 +47,7 @@ TEST_F(LoggerTest, LogFunctionality)
 {
     const char logMsg[] = "Hello World!";
     iLoggerHandle->log(iLoggerHandle, log_severity, logMsg);
-    EXPECT_STREQ(logMsg, Logger_getBuffer(loggerHandle));
+    EXPECT_STREQ("WARNING: Hello World!", Logger_getBuffer(loggerHandle));
 }
 
 TEST_F(LoggerTest, LongMessage)
@@ -58,5 +58,20 @@ TEST_F(LoggerTest, LongMessage)
                               "labore et dolore magna aliquyam erat, sed diam "
                               "voluptua. At vero eos et accusam et justo duo dolores ";
     iLoggerHandle->log(iLoggerHandle, log_severity, longLogMsg);
-    EXPECT_STRNE(longLogMsg, Logger_getBuffer(loggerHandle));   /* string will be shortened */
+
+    /* Log level will be added, String will be shortened */
+    EXPECT_STREQ("WARNING: Lorem ipsum dolor sit amet, consetetur "
+                 "sadipscing elitr, sed diam nonumy eirmod tempor invi",
+                 Logger_getBuffer(loggerHandle));
 }
+
+TEST_F(LoggerTest, severities)
+{
+    //TODO check the various severities
+}
+
+TEST_F(LoggerTest, multiple_logs)
+{
+    //TODO log multiple logs one after another, see if this works
+}
+
