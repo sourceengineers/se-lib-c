@@ -14,8 +14,8 @@ protected:
 
     void SetUp() override
     {
-        buf_size = 100;
         log_severity = WARNING;
+        buf_size = 100;
         loggerHandle = Logger_create(buf_size);              /* create LoggerHandle */
         iLoggerHandle = Logger_getILogger(loggerHandle);        /* get the interface  */
     }
@@ -52,7 +52,7 @@ TEST_F(LoggerTest, LogFunctionality)
 
 TEST_F(LoggerTest, LongMessage)
 {
-    //200 char long log message
+    //200 char long log message, should be shortened
     const char longLogMsg[] = "Lorem ipsum dolor sit amet, consetetur sadipscing "
                               "elitr, sed diam nonumy eirmod tempor invidunt ut "
                               "labore et dolore magna aliquyam erat, sed diam "
@@ -67,11 +67,23 @@ TEST_F(LoggerTest, LongMessage)
 
 TEST_F(LoggerTest, severities)
 {
-    //TODO check the various severities
-}
+    severity sev_info = INFO;
+    severity sev_debug = DEBUG;
+    severity sev_warning = WARNING;
+    severity sev_error = ERROR;
 
-TEST_F(LoggerTest, multiple_logs)
-{
-    //TODO log multiple logs one after another, see if this works
-}
+    const char logMsg[] = "Log Message";
+    iLoggerHandle->log(iLoggerHandle, sev_info, logMsg);
+    EXPECT_STREQ("INFO: Log Message",
+                 Logger_getBuffer(loggerHandle));
+    iLoggerHandle->log(iLoggerHandle, sev_debug, logMsg);
+    EXPECT_STREQ("DEBUG: Log Message",
+                 Logger_getBuffer(loggerHandle));
+    iLoggerHandle->log(iLoggerHandle, sev_warning, logMsg);
+    EXPECT_STREQ("WARNING: Log Message",
+                 Logger_getBuffer(loggerHandle));
+    iLoggerHandle->log(iLoggerHandle, sev_error, logMsg);
+    EXPECT_STREQ("ERROR: Log Message",
+                 Logger_getBuffer(loggerHandle));
 
+}

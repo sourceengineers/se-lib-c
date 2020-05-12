@@ -48,13 +48,6 @@ void Logger_log(LoggerHandle self, SEVERITY severity, const char* msg );
 ILoggerHandle Logger_getILogger(LoggerHandle self);
 
 /**
- * Reallocates more memory in case there is a long string
- * @param mem
- */
-// TODO check if this is needed?
-bool Logger_reallocateMemory(LoggerHandle  self, size_t mem);
-
-/**
  * Returns the messagebuffer
  * @param self
  * @return char*
@@ -70,21 +63,6 @@ char* Logger_getBuffer(LoggerHandle self);
 // TODO check if this is needed?
 char* Logger_getBufferedByteStream(LoggerHandle self);
 
-/**
- * Attatches the observer which has to be called to execute a pack event
- * @param self
- * @param observer
- */
-// TODO check if this is needed?
-void Logger_attachBufferObserver(LoggerHandle self, IObserverHandle observer);
-
-/**
- * Calculates the buffere size for the byte stream
- * @param
- * @param calculated buffer size
- */
-// TODO check if this is needed?
-size_t Logger_calculateBufferSize();
 
 /**
  * Destructor
