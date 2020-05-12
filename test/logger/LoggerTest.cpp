@@ -7,16 +7,24 @@ extern "C" {
 class LoggerTest : public ::testing::Test
 {
 protected:
+
+
     LoggerTest()
             : Test()
     {
+
     }
+
+    LoggerHandle loggerHandle;
+    ILoggerHandle iLoggerHandle;
+    severity log_severity;
+    size_t buf_size;
 
     void SetUp() override
     {
         log_severity = WARNING;
         buf_size = 100;
-        loggerHandle = Logger_create(buf_size);              /* create LoggerHandle */
+        loggerHandle = Logger_create(buf_size);                 /* create LoggerHandle */
         iLoggerHandle = Logger_getILogger(loggerHandle);        /* get the interface  */
     }
 
@@ -30,10 +38,7 @@ protected:
 
     }
 
-    LoggerHandle loggerHandle;
-    ILoggerHandle iLoggerHandle;
-    severity log_severity;
-    size_t buf_size;
+
 };
 
 TEST_F(LoggerTest, LoggerCreated)
@@ -85,5 +90,22 @@ TEST_F(LoggerTest, severities)
     iLoggerHandle->log(iLoggerHandle, sev_error, logMsg);
     EXPECT_STREQ("ERROR: Log Message",
                  Logger_getBuffer(loggerHandle));
+}
 
+TEST_F(LoggerTest, multiple_instances)
+{
+    LoggerHandle h1 = Logger_create(100);
+    LoggerHandle h2 = Logger_create(200);
+
+    ILoggerHandle ih1 = Logger_getILogger(h1);
+    ILoggerHandle ih2 = Logger_getILogger(h2);
+
+    ih1->log(ih1, log_severity, "Test 1");
+    ih2->log(ih2, log_severity, "Test 2");
+
+    EXPECT_STREQ("WARNING: Test 1",
+                 Logger_getBuffer(h1));
+
+    EXPECT_STREQ("WARNING: Test 2",
+                 Logger_getBuffer(h2));
 }

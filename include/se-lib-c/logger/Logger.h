@@ -16,6 +16,7 @@
 #include <se-lib-c/logger/ILogger.h>
 #include <se-lib-c/util/observer/IObserver.h>
 #include <time.h>
+#include <se-lib-c/stream/IByteStream.h>
 
 /******************************************************************************
  Define class handle data
@@ -31,14 +32,6 @@ typedef struct __LoggerPrivateData* LoggerHandle;
  * @return
  */
 LoggerHandle Logger_create(size_t bufferSize);
-
-/**
- * Log of messages
- * @param self
- * @return
- */
- // TODO check if this is needed? I think it would be better to make this function private to avoid direct access
-void Logger_log(LoggerHandle self, SEVERITY severity, const char* msg );
 
 /**
  * Returns the ILogger interface
@@ -61,7 +54,7 @@ char* Logger_getBuffer(LoggerHandle self);
  * @return char*
  */
 // TODO check if this is needed?
-char* Logger_getBufferedByteStream(LoggerHandle self);
+IByteStreamHandle Logger_getBufferedByteStream(LoggerHandle self);
 
 
 /**
