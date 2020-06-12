@@ -15,7 +15,6 @@
 typedef struct __LoggerBuilderPrivateData{
     IByteStreamHandle streamer;
     LoggerHandle  logger;
-
     size_t bufferSize;
 } LoggerBuilderPrivateData;
 /******************************************************************************
@@ -43,8 +42,7 @@ LoggerObject LoggerBuilder_build(LoggerBuilderHandle self){
 
     LoggerObject obj;
 
-    self->logger = Logger_create( self->bufferSize );
-
+    //self->logger = Logger_create( self->bufferSize );
     obj.logger = Logger_getILogger(self->logger);
 
     return  obj;
@@ -52,10 +50,6 @@ LoggerObject LoggerBuilder_build(LoggerBuilderHandle self){
 
 char* LoggerBuilder_getBuffer(LoggerBuilderHandle self){
     return Logger_getBuffer(self->logger);
-}
-
-char* LoggerBuilder_getBufferedByteStream(LoggerBuilderHandle self){
-    return Logger_getBufferedByteStream(self->logger);
 }
 
 void LoggerBuilder_destroy(LoggerBuilderHandle self){

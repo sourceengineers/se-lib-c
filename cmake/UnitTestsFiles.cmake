@@ -29,6 +29,7 @@ set(SE_LIB_C_SOURCES
 set(SE_LIB_C_MOCKS
 	${TEST_ROOT}/util/runnable/MockRunnable.c
 	${TEST_ROOT}/driver/MockAdcDriver.c
+	${TEST_ROOT}/stream/MockByteStream.c
 )
 
 # Add tests

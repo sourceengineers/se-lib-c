@@ -31,7 +31,7 @@ typedef struct __LoggerPrivateData* LoggerHandle;
  * @param 
  * @return
  */
-LoggerHandle Logger_create(size_t bufferSize);
+LoggerHandle Logger_create(size_t logMessageSize, IByteStreamHandle byteStream);
 
 /**
  * Returns the ILogger interface
@@ -40,22 +40,22 @@ LoggerHandle Logger_create(size_t bufferSize);
  */
 ILoggerHandle Logger_getILogger(LoggerHandle self);
 
-/**
- * Returns the messagebuffer
- * @param self
- * @return char*
- */
-// TODO check if this is needed?
-char* Logger_getBuffer(LoggerHandle self);
 
 /**
  * Returns the buffered byte stream
  * @param self
  * @return char*
  */
-// TODO check if this is needed?
 IByteStreamHandle Logger_getBufferedByteStream(LoggerHandle self);
 
+
+#ifdef UNIT_TEST
+/**
+ * Returns the messagebuffer
+ * @param self
+ * @return char*
+ */
+char* Logger_getBuffer(LoggerHandle self);
 
 /**
  * Destructor
@@ -63,5 +63,6 @@ IByteStreamHandle Logger_getBufferedByteStream(LoggerHandle self);
  * @return
  */
  void LoggerDestroy(LoggerHandle self);
+#endif
 
 #endif //SE_SCOPE_LOGGER_H
