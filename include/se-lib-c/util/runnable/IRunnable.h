@@ -13,6 +13,7 @@
 #define IRUNNABLE_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
+#include <stdbool.h>
 
 /******************************************************************************
  Define interface handle data
@@ -23,7 +24,7 @@ typedef struct IRunnableStruct* IRunnableHandle;
  Define interface
 ******************************************************************************/
 typedef struct IRunnableStruct{
-    GenericReference handle;
+    SeLibGenericReferece handle;
 
     /**
      * Runs the class which implemented the runnable

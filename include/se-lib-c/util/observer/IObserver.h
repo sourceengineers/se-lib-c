@@ -23,7 +23,7 @@ typedef struct IObserverStruct* IObserverHandle;
  Define interface
 ******************************************************************************/
 typedef struct IObserverStruct{
-    GenericReference handle;
+    SeLibGenericReferece handle;
 
     /**
      * Calls an update on the class which implemented the observer

@@ -1,0 +1,10 @@
+get_filename_component(SE_LIB_C_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+set(SE_LIB_C_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+if(NOT TARGET se-lib-c AND NOT SE_LIB_C_BINARY_DIR)
+	include("${SE_LIB_C_CMAKE_DIR}/SeLibCTargets.cmake")
+endif()
+
+set(SE_LIB_C se-lib-c)

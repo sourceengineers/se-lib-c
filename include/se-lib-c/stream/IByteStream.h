@@ -13,6 +13,9 @@
 #define IBYTESTREAM_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
 
 /******************************************************************************
  Define interface handle data
@@ -23,7 +26,7 @@ typedef struct IByteStreamStruct* IByteStreamHandle;
  Define interface
 ******************************************************************************/
 typedef struct IByteStreamStruct{
-    GenericReference handle;
+    SeLibGenericReferece handle;
 
     /**
      * Checks if data is pending

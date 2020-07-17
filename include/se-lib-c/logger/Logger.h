@@ -15,6 +15,8 @@
 
 #include <se-lib-c/logger/ILogger.h>
 #include <se-lib-c/util/observer/IObserver.h>
+#include <stdbool.h>
+#include <stddef.h>
 #include <time.h>
 #include <se-lib-c/stream/IByteStream.h>
 
