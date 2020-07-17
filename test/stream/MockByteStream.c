@@ -15,6 +15,14 @@
 #include <string.h>
 
 
+bool mockWrite(IByteStreamHandle handle, const uint8_t* data, const size_t length)
+{
+    MockByteStream* me = (MockByteStream*)handle;
+    assert(me != NULL);
+    strcpy(me->stringBuffer, data);
+    return true;
+}
+
 /**
  * The implementation of the Parent methods.
  * @{
@@ -22,32 +30,29 @@
 /** @} */
 
 
-void MockByteStream_init(MockByteStream me)
+//NOTE so muss es sein, mit Pointer auf MockByteStream, nicht das Objekt.
+void MockByteStream_init(MockByteStream* me)
 {
     // initialize interface
-    me.parent.handle = &me;
+    me->parent.handle = &me;
 
-    me.parent.write = &mockWrite;
+    me->parent.byteIsReady = NULL;
+    me->parent.readByte = NULL;
+    me->parent.length = NULL;
+    me->parent.read = NULL;
+    me->parent.writeByte = NULL;
+    me->parent.write = &mockWrite;
+    me->parent.flush = NULL;
+    me->parent.capacity = NULL;
 
     // initialize private variables
-    memset(me.stringBuffer,0,STRING_BUFFER_SIZE);
+    memset(me->stringBuffer,0,STRING_BUFFER_SIZE);
 }
 
-IByteStream* MockByteStream_getBytestreamInterface(MockByteStream me)
+
+IByteStream* MockByteStream_getBytestreamInterface(MockByteStream* me)
 {
-    assert(&me != NULL);
-    assert(&me.parent != NULL);
-    //TODO return the actual IByteStream instead of NULL
-    //return me.parent.handle;
-    return NULL;
+    assert(&me->parent != NULL);
+    return &me->parent;
 }
 
-//TODO finish implementation of mockWrite
-bool mockWrite(IByteStreamHandle handle, const uint8_t data, const size_t length)
-{
-    bool success = false;
-    MockByteStream* me = (MockByteStream*)handle;
-    assert(me != NULL);
-    strcpy(me->stringBuffer, data); // write the data in the stringBuffer
-    return success;
-}

@@ -47,7 +47,6 @@ static char* loggerPrepareSeverity(SEVERITY severity)
 
 LoggerHandle Logger_create(size_t logMessageSize, IByteStreamHandle byteStream)
 {
-    // TODO why is the byteStream always NULL, should not be!
     LoggerHandle self = malloc(sizeof(LoggerPrivateData));
     //TODO ASSERT(self);
     self->logBuffer = malloc(logMessageSize);
@@ -104,7 +103,6 @@ char* Logger_getBuffer(LoggerHandle self)
 
 void LoggerDestroy(LoggerHandle self)
 {
-    //TODO this. Who has to destroy the BufferedByteStream?
     free(self);
 }
 #endif

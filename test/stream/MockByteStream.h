@@ -28,14 +28,11 @@ typedef struct __MockByteStreamPrivateData
 /**
  * initialize a MockByteStream instance.
  */
-void MockByteStream_init(MockByteStream me);
-
-
-bool mockWrite(IByteStreamHandle parent, const uint8_t data, const size_t length);
+void MockByteStream_init(MockByteStream* me);
 
 /**
  * Returns a pointer to the IBytestream.
  */ 
-IByteStream* MockByteStream_getBytestreamInterface(MockByteStream me);
+IByteStream* MockByteStream_getBytestreamInterface(MockByteStream* me);
 
 #endif // MOCKBYTESTREAM_H_

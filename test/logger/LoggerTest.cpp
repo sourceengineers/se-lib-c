@@ -24,10 +24,10 @@ protected:
 
     void SetUp() override
     {
-        MockByteStream_init(_byteStream);
+        MockByteStream_init(&_byteStream);
         log_severity = WARNING;
         buf_size = 100;
-        loggerHandle = Logger_create(buf_size, MockByteStream_getBytestreamInterface(_byteStream));       /* create LoggerHandle */
+        loggerHandle = Logger_create(buf_size, MockByteStream_getBytestreamInterface(&_byteStream));       /* create LoggerHandle */
         iLoggerHandle = Logger_getILogger(loggerHandle);        /* get the interface  */
     }
 
@@ -54,9 +54,8 @@ TEST_F(LoggerTest, LogFunctionality)
 {
     const char logMsg[] = "Hello World!";
     iLoggerHandle->log(iLoggerHandle, log_severity, logMsg);
-    EXPECT_STREQ("WARNING: Hello World!", Logger_getBuffer(loggerHandle));  //  OK
-    //TODO check for the _byteStream.stringBuffer instead of Logger_getBuffer
-    //EXPECT_STREQ("WARNING: Hello World!", _byteStream.stringBuffer);        //  not OK
+    EXPECT_STREQ("WARNING: Hello World!", Logger_getBuffer(loggerHandle));
+    EXPECT_STREQ("WARNING: Hello World!", _byteStream.stringBuffer);
 }
 
 TEST_F(LoggerTest, LongMessage)
