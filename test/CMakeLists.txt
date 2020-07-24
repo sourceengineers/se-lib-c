@@ -3,6 +3,7 @@ set(SE_LIB_C_TEST ${SE_LIB_C}-test)
 
 project(${SE_LIB_C_TEST})
 
+
 include(cmake/UnitTestFiles.cmake)
 
 if(NOT TARGET gtest)
@@ -16,6 +17,7 @@ add_executable(${SE_LIB_C_TEST}
         ${SE_LIB_C_MOCKS}
         )
 
+target_compile_options(${SE_LIB_C_TEST} PUBLIC -DUNIT_TEST)
 target_include_directories(${SE_LIB_C_TEST} PRIVATE ${gmock_SOURCE_DIR}/include)
 target_include_directories(${SE_LIB_C_TEST} PRIVATE ${gmock_SOURCE_DIR})
 target_include_directories(${SE_LIB_C_TEST} PRIVATE ${gtest_SOURCE_DIR}/include)

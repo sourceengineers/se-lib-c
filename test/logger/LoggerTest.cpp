@@ -2,6 +2,7 @@
 
 extern "C" {
 #include <se-lib-c/logger/Logger.h>
+#include <se-lib-c/logger/ILogger.h>
 #include <stream/MockByteStream.h>
 }
 

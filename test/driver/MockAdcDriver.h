@@ -12,8 +12,8 @@
 #ifndef MOCKADCDRIVER_H_
 #define MOCKADCDRIVER_H_
 
-#include "driver/IAdcDriver.h"
 #include <stdint.h>
+#include <se-lib-c/driver/IAdcDriver.h>
 
 #define NUMBER_OF_ADC_CHANNELS 6
 /**
