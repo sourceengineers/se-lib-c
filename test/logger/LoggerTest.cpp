@@ -73,6 +73,15 @@ TEST_F(LoggerTest, LongMessage)
                  Logger_getBuffer(loggerHandle));
 }
 
+
+TEST_F(LoggerTest, BufferOverflow)
+{
+    const char bufferOverflowMsg[] = "TEST_BUFFER_OVERFLOW_1234567890";
+    iLoggerHandle->log(iLoggerHandle, log_severity, bufferOverflowMsg);
+    EXPECT_STREQ("SCOPE BUF OVFL;",Logger_getBuffer(loggerHandle));
+}
+
+
 TEST_F(LoggerTest, severities)
 {
     severity sev_info = INFO;
@@ -97,18 +106,25 @@ TEST_F(LoggerTest, severities)
 
 TEST_F(LoggerTest, multiple_instances)
 {
-    LoggerHandle h1 = Logger_create(100, NULL);
-    LoggerHandle h2 = Logger_create(200, NULL);
+    MockByteStream _byteStream1;
+    MockByteStream _byteStream2;
 
-    ILoggerHandle ih1 = Logger_getILogger(h1);
-    ILoggerHandle ih2 = Logger_getILogger(h2);
+    MockByteStream_init(&_byteStream1);
+    MockByteStream_init(&_byteStream2);
 
-    ih1->log(ih1, log_severity, "Test 1");
-    ih2->log(ih2, log_severity, "Test 2");
+    LoggerHandle loggerHandle1 = Logger_create(buf_size, MockByteStream_getBytestreamInterface(&_byteStream1));
+    LoggerHandle loggerHandle2 = Logger_create(buf_size, MockByteStream_getBytestreamInterface(&_byteStream2));
+
+    ILoggerHandle iLoggerHandle1 = Logger_getILogger(loggerHandle1);
+    ILoggerHandle iLoggerHandle2 = Logger_getILogger(loggerHandle2);
+
+
+    iLoggerHandle1->log(iLoggerHandle1, log_severity, "Test 1");
+    iLoggerHandle2->log(iLoggerHandle2, log_severity, "Test 2");
 
     EXPECT_STREQ("WARNING: Test 1",
-                 Logger_getBuffer(h1));
+                 Logger_getBuffer(loggerHandle1));
 
     EXPECT_STREQ("WARNING: Test 2",
-                 Logger_getBuffer(h2));
+                 Logger_getBuffer(loggerHandle2));
 }

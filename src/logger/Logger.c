@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
 
 /******************************************************************************
@@ -48,12 +49,12 @@ static char* loggerPrepareSeverity(SEVERITY severity)
 LoggerHandle Logger_create(size_t logMessageSize, IByteStreamHandle byteStream)
 {
     LoggerHandle self = malloc(sizeof(LoggerPrivateData));
-    //TODO ASSERT(self);
+    assert(self);
     self->logBuffer = malloc(logMessageSize);
-    //TODO ASSERT(self->logBuffer);
+    assert(self->logBuffer);
     self->logMessageSize = logMessageSize;
     self->byteStream = byteStream;
-    //TODO ASSERT(self->byteStream);
+    assert(self->byteStream);
 
     // setup the base-class (ILog interface)
     self->loggerBase.handle = self;
@@ -86,11 +87,11 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg )
             strncat(self->logBuffer, msg, self->logMessageSize - strlen(severity_string) - strlen(separating_seq));
         }
 
-        //byteStream is NULL
         if(self->byteStream &&
-           !self->byteStream->write(self->byteStream,self->logBuffer,lengthOfCurrentMessage))
-        {
-            //TODO remove 10 bytes, add "BUF OVFL;"
+           !self->byteStream->write(self->byteStream, self->logBuffer, lengthOfCurrentMessage))
+        {  /* Buffer Overflow */
+            //TODO instead of replacing the contens, add buf ovfl at the end
+            strcpy(self->logBuffer, "SCOPE BUF OVFL;");
         }
     }
 }

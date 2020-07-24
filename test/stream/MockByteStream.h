@@ -15,7 +15,7 @@
 #include <se-lib-c/stream/IByteStream.h>
 #include <stdint.h>
 
-#define STRING_BUFFER_SIZE 512
+#define STRING_BUFFER_SIZE 256
 /**
  * Declaration of the mock object.
  */

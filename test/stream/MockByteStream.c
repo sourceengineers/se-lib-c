@@ -17,10 +17,23 @@
 
 bool mockWrite(IByteStreamHandle handle, const uint8_t* data, const size_t length)
 {
-    MockByteStream* me = (MockByteStream*)handle;
-    assert(me != NULL);
-    strcpy(me->stringBuffer, data);
-    return true;
+    if(strlen(data) > STRING_BUFFER_SIZE)
+    {
+        return false;
+    }
+    // Return a buffer overflow when this message is logged
+    if(strcmp(data, "WARNING: TEST_BUFFER_OVERFLOW_1234567890") == 0)
+    {
+        return false;
+    }
+    else
+    {
+        MockByteStream* me = (MockByteStream*)handle;
+        assert(me != NULL);
+        strcpy(me->stringBuffer, data);
+        return true;
+    }
+
 }
 
 /**
