@@ -12,7 +12,6 @@
 #ifndef FLOATRINGBUFFER_H_
 #define FLOATRINGBUFFER_H_
 
-#include <se-lib-c/definition/SeLibCTypes.h>
 #include <se-lib-c/stream/IFloatStream.h>
 #include <stddef.h>
 

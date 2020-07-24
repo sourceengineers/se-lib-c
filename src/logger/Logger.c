@@ -106,4 +106,3 @@ void LoggerDestroy(LoggerHandle self)
 {
     free(self);
 }
-#endif

@@ -13,6 +13,9 @@
 #define IINTSTREAM_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 /******************************************************************************
  Define interface handle data
@@ -23,7 +26,7 @@ typedef struct IIntStreamStruct* IIntStreamHandle;
  Define interface
 ******************************************************************************/
 typedef struct IIntStreamStruct{
-    GenericReference handle;
+    SeLibGenericReferece handle;
 
     /**
      * Checks if data is pending
