@@ -40,6 +40,8 @@ target_include_directories(
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+add_library(se-lib::c ALIAS ${SE_LIB_C})
+target_link_libraries(${SE_LIB_C} INTERFACE se-lib::c)
 ################################################################################
 # Add testing if enabled
 ################################################################################

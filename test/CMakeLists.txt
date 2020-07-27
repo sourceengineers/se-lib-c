@@ -23,5 +23,5 @@ target_include_directories(${SE_LIB_C_TEST} PRIVATE .)
 target_link_libraries(
         ${SE_LIB_C_TEST}
         PRIVATE
-        ${SE_LIB_C}
+        se-lib::c
         test::gtest)

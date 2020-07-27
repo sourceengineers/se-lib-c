@@ -28,6 +28,6 @@ target_include_directories(gtest-lib INTERFACE
 		${gtest_SOURCE_DIR}
 		${gtest_SOURCE_DIR}/include)
 target_link_libraries(gtest-lib INTERFACE gtest gtest_main pthread)
-add_library(test::gtest ALIAS gtest-lib)
 
+add_library(test::gtest ALIAS gtest-lib)
 target_link_libraries(gtest-lib INTERFACE test::gtest)
