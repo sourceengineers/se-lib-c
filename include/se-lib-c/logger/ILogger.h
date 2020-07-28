@@ -19,7 +19,7 @@
  Define interface handle data
 ******************************************************************************/
 typedef struct ILoggerStruct* ILoggerHandle;
-typedef enum severity {INFO, DEBUG, WARNING, ERROR} SEVERITY;       //TODO change to unique names
+typedef enum severity {SC_INFO, SC_DEBUG, SC_WARNING, SC_ERROR} SEVERITY;       //TODO change to unique names
 
 /******************************************************************************
  Define interface

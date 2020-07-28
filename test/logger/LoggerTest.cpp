@@ -26,7 +26,7 @@ protected:
     void SetUp() override
     {
         MockByteStream_init(&_byteStream);
-        log_severity = WARNING;
+        log_severity = SC_WARNING;
         buf_size = 100;
         loggerHandle = Logger_create(buf_size, MockByteStream_getBytestreamInterface(&_byteStream));       /* create LoggerHandle */
         iLoggerHandle = Logger_getILogger(loggerHandle);        /* get the interface  */
@@ -85,10 +85,10 @@ TEST_F(LoggerTest, BufferOverflow)
 
 TEST_F(LoggerTest, severities)
 {
-    severity sev_info = INFO;
-    severity sev_debug = DEBUG;
-    severity sev_warning = WARNING;
-    severity sev_error = ERROR;
+    severity sev_info = SC_INFO;
+    severity sev_debug = SC_DEBUG;
+    severity sev_warning = SC_WARNING;
+    severity sev_error = SC_ERROR;
 
     const char logMsg[] = "Log Message";
     iLoggerHandle->log(iLoggerHandle, sev_info, logMsg);
