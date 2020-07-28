@@ -40,6 +40,8 @@ target_include_directories(
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+add_library(se-lib::c ALIAS ${SE_LIB_C})
+target_link_libraries(${SE_LIB_C} INTERFACE se-lib::c)
 ################################################################################
 # Add testing if enabled
 ################################################################################
@@ -67,8 +69,6 @@ configure_file(${SE_LIB_CONFIG_IN} "${PROJECT_BINARY_DIR}/SeLibCConfig.cmake" @O
 set(CONF_INCLUDE_DIRS "\${SE_LIB_C_CMAKE_DIR}/${REL_INCLUDE_DIR}")
 configure_file(${SE_LIB_CONFIG_IN} "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SeLibCConfig.cmake" @ONLY)
 configure_file(${SE_LIB_CONFIG_VERSION_IN} "${PROJECT_BINARY_DIR}/SeLibCConfigVersion.cmake" @ONLY)
-
-add_definitions(-DUNIT_TEST)
 
 ################################################################################
 # Install the generated files
