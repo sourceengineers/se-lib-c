@@ -70,8 +70,6 @@ set(CONF_INCLUDE_DIRS "\${SE_LIB_C_CMAKE_DIR}/${REL_INCLUDE_DIR}")
 configure_file(${SE_LIB_CONFIG_IN} "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SeLibCConfig.cmake" @ONLY)
 configure_file(${SE_LIB_CONFIG_VERSION_IN} "${PROJECT_BINARY_DIR}/SeLibCConfigVersion.cmake" @ONLY)
 
-add_definitions(-DUNIT_TEST)
-
 ################################################################################
 # Install the generated files
 ################################################################################
