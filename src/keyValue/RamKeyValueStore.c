@@ -14,8 +14,8 @@
 typedef struct RamKeyValueStore_PrivateData
 {
     IKeyValueStore base;
-    KeyValuePair* keyValueArray;
-    uint16_t arraySize;
+    KeyValue_Pair* keyValueArray;
+    uint16_t numberOfPairs;
 } PrivateData;
 
 /**
@@ -37,18 +37,17 @@ RamKeyValueStore_Handle RamKeyValueStore_create(uint16_t numberOfKeys)
     me->base.get = &get;
 
     // initialize private variables
-    me->arraySize = numberOfKeys;
-    me->keyValueArray = (KeyValuePair *) malloc(sizeof(KeyValuePair)*(numberOfKeys));
+    me->numberOfPairs = numberOfKeys;
+    me->keyValueArray = (KeyValue_Pair *) malloc(sizeof(KeyValue_Pair) * (numberOfKeys));
     assert(me->keyValueArray != NULL);
     return me;
 }
 
-// private
 // determine index of key in keyValueArray
-bool RamKeyValueStore_getIndexOfKey(RamKeyValueStore_Handle me, uint16_t key, uint16_t* index)
+static bool getIndexOfKey(RamKeyValueStore_Handle me, uint16_t key, uint16_t* index)
 {
     bool success = false;
-    for(uint16_t i = 0; i < (me->arraySize); i++)
+    for(uint16_t i = 0; i < (me->numberOfPairs); i++)
     {
         if(me->keyValueArray[i].key == key)
         {
@@ -60,17 +59,6 @@ bool RamKeyValueStore_getIndexOfKey(RamKeyValueStore_Handle me, uint16_t key, ui
     return success;
 }
 
-// private
-// determine index of first unused slot in keyValueArray
-uint16_t RamKeyValueStore_getIndexOfFistUnusedSlot(RamKeyValueStore_Handle me, uint16_t* index) {
-    bool success = false;
-    if (RamKeyValueStore_getIndexOfKey(me, 0, index))
-    {
-        success = true;
-    }
-    return success;
-}
-
 // set function
 bool set(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value value) //TODO: rename KeyValue_Value value to something more suiting
 {
@@ -78,7 +66,7 @@ bool set(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value value) //TOD
     PrivateData* me = (PrivateData*)handle;
     assert(me != NULL);
     uint16_t index;
-    if(RamKeyValueStore_getIndexOfKey(me, key, &index))
+    if(getIndexOfKey(me, key, &index))
     {
         me->keyValueArray[index].value = value;
         success = true;
@@ -93,7 +81,7 @@ bool get(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value* value)
     PrivateData* me = (PrivateData*)handle;
     assert(me != NULL);
     uint16_t index;
-    if(RamKeyValueStore_getIndexOfKey(me, key, &index))
+    if(getIndexOfKey(me, key, &index))
     {
         *value = me->keyValueArray[index].value;
         success = true;
@@ -106,7 +94,7 @@ bool RamKeyValueStore_add(RamKeyValueStore_Handle me, uint16_t key, KeyValue_Val
 {
     bool success = false;
     uint16_t index;
-    if(RamKeyValueStore_getIndexOfFistUnusedSlot(me,&index) && key > 0)
+    if(getIndexOfKey(me, 0, &index) && key > 0) // key = 0 => field empty
     {
         me->keyValueArray[index].key = key;
         me->keyValueArray[index].value = initialValue;

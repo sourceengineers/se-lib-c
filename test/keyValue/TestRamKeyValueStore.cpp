@@ -50,61 +50,68 @@ TEST_F(RamKeyValueStoreTest, AddGetSet)
 
     //int 16
     kv_data = {.i16 = -16};
-    KeyValue_Value value_int16 = {KEY_TYPE_INT16, kv_data}; // create KeyValue_Value
+    KeyValue_Value value_int16; // = {KEY_TYPE_INT16, kv_data}; // create KeyValue_Value
+    value_int16.type = KEY_TYPE_INT16;
+    value_int16.data.i16 = kv_data.i16;
     // add a int16 value with key 1
     EXPECT_EQ(true, RamKeyValueStore_add(_ramKeyValueStore, 1u, value_int16));
     // get value for key 1
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 1u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_int16.type, kv_value.type);
-    EXPECT_EQ(value_int16.data.i16, kv_value.data.i16); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
+    EXPECT_EQ(value_int16.data.i16, kv_value.data.i16);
 
     //int 32
     kv_data.i32 = -32;
-    //KeyValue_Value value_int32 = {KEY_TYPE_INT32, kv_data.data.i32};
-    KeyValue_Value value_int32 = {KEY_TYPE_INT32, kv_data};
-    // add a int32 value with key 2
+    KeyValue_Value value_int32; // = {KEY_TYPE_INT32, kv_data};
+    value_int32.type = KEY_TYPE_INT32;
+    value_int32.data.i32 = kv_data.i32;
     EXPECT_EQ(true, RamKeyValueStore_add(_ramKeyValueStore, 2u, value_int32));
     // get value for key 2
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 2u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_int32.type, kv_value.type);
-    EXPECT_EQ(value_int32.data.i32, kv_value.data.i32); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
+    EXPECT_EQ(value_int32.data.i32, kv_value.data.i32);
 
     //uint 16
     kv_data.ui16 = 16u;
-    KeyValue_Value value_uint16 = {KEY_TYPE_UINT16, kv_data};
+    KeyValue_Value value_uint16; // = {KEY_TYPE_UINT16, kv_data};
+    value_uint16.type = KEY_TYPE_UINT16;
+    value_uint16.data.ui16 = kv_data.ui16;
     // add a uint16 value with key 3
     EXPECT_EQ(true, RamKeyValueStore_add(_ramKeyValueStore, 3u, value_uint16));
     // get value for key 3
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 3u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_uint16.type, kv_value.type);
-    EXPECT_EQ(value_uint16.data.ui16, kv_value.data.ui16); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
+    EXPECT_EQ(value_uint16.data.ui16, kv_value.data.ui16);
 
     //uint 32
     kv_data.ui32 = 32u;
-    KeyValue_Value value_uint32 = {KEY_TYPE_UINT32, kv_data};
+    KeyValue_Value value_uint32; // = {KEY_TYPE_UINT32, kv_data};
+    value_uint32.type = KEY_TYPE_UINT32;
+    value_uint32.data.ui32 = kv_data.ui32;
     // add a uint32 value with key 4
     EXPECT_EQ(true, RamKeyValueStore_add(_ramKeyValueStore, 4u, value_uint32));
     // get value for key 4
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 4u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_uint32.type, kv_value.type);
-    EXPECT_EQ(value_uint32.data.ui32, kv_value.data.ui32); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
+    EXPECT_EQ(value_uint32.data.ui32, kv_value.data.ui32);
 
-    /*
     //float
     kv_data.f = 0.0f;
-    KeyValue_Value value_float = {KEY_TYPE_FLOAT, kv_data};
+    KeyValue_Value value_float; // = {KEY_TYPE_FLOAT, kv_data};
+    value_float.type = KEY_TYPE_FLOAT;
+    value_float.data.f = kv_data.f;
     // add a float value with key 5
     EXPECT_EQ(true, RamKeyValueStore_add(_ramKeyValueStore, 5u, value_float));
     // get value for key 5
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 5u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_float.type, kv_value.type);
-    EXPECT_EQ(value_float.data.f, kv_value.data.f); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
-*/
+    EXPECT_EQ(value_float.data.f, kv_value.data.f);
+
     // test add with invalid keys
     EXPECT_EQ(false, RamKeyValueStore_add(_ramKeyValueStore, 6u, value_int16));
     EXPECT_EQ(false, RamKeyValueStore_add(_ramKeyValueStore, 0u, value_int16));
@@ -121,7 +128,7 @@ TEST_F(RamKeyValueStoreTest, AddGetSet)
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 1u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_int32.type, kv_value.type);
-    EXPECT_EQ(value_int32.data.i32, kv_value.data.i32); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
+    EXPECT_EQ(value_int32.data.i32, kv_value.data.i32);
 
     // set key 2 to value_uint16
     EXPECT_EQ(true, iKeyValueStore->set(iKeyValueStore->handle, 2u, value_uint16));
@@ -129,7 +136,7 @@ TEST_F(RamKeyValueStoreTest, AddGetSet)
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 2u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_uint16.type, kv_value.type);
-    EXPECT_EQ(value_uint16.data.ui16, kv_value.data.ui16); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
+    EXPECT_EQ(value_uint16.data.ui16, kv_value.data.ui16);
 
     // set key 3 to value_uint32
     EXPECT_EQ(true, iKeyValueStore->set(iKeyValueStore->handle, 3u, value_uint32));
@@ -137,35 +144,25 @@ TEST_F(RamKeyValueStoreTest, AddGetSet)
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 3u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_uint32.type, kv_value.type);
-    EXPECT_EQ(value_uint32.data.ui32, kv_value.data.ui32); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
-/*
+    EXPECT_EQ(value_uint32.data.ui32, kv_value.data.ui32);
+
     // set key 4 to value_float
     EXPECT_EQ(true, iKeyValueStore->set(iKeyValueStore->handle, 4u, value_float));
     // get key 4 should be value_float
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 4u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_float.type, kv_value.type);
-    EXPECT_EQ(value_float.data.f, kv_value.data.f); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
-*/
+    EXPECT_EQ(value_float.data.f, kv_value.data.f);
+
     // set key 5 to value_int16
     EXPECT_EQ(true, iKeyValueStore->set(iKeyValueStore->handle, 5u, value_int16));
     // get key 5 should be value_int16
     EXPECT_EQ(true, iKeyValueStore->get(iKeyValueStore->handle, 5u, &kv_value));
     // compare received with expected
     EXPECT_EQ(value_int16.type, kv_value.type);
-    EXPECT_EQ(value_int16.data.i16, kv_value.data.i16); //TODO: remove hardcoded type when reading kv_value.data, should be based on kv_value.type
+    EXPECT_EQ(value_int16.data.i16, kv_value.data.i16);
 
     // test set with invalid keys
     EXPECT_EQ(false, iKeyValueStore->set(iKeyValueStore->handle, 6u, value_int16));
     EXPECT_EQ(false, iKeyValueStore->set(iKeyValueStore->handle, 0u, value_int16));
-
-/*
-    // messing around
-    KeyValue_Data *kv_data_pointer;
-    kv_data_pointer = &(kv_value.data);
-    //int16_t val = kv_data_pointer[0];
-    EXPECT_EQ(value_int16.data.i16, kv_data_pointer[0]);
-    KeyValue_KeyType kv_key_type = kv_value.type;
-
-*/
- }
+}

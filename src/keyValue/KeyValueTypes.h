@@ -32,7 +32,7 @@ typedef union __KeyValue_Data
     int32_t i32;
     uint16_t ui16;
     uint32_t ui32;
-    //float  f;
+    float  f;
 }KeyValue_Data;
 
 typedef struct _KeyValue_Value
@@ -46,6 +46,6 @@ typedef struct __KeyValuePair
 {
     uint16_t key;
     KeyValue_Value value;
-}KeyValuePair;
+}KeyValue_Pair;
 
 #endif //KEYVALUETYPES_H_
