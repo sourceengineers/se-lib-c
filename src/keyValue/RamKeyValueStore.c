@@ -63,6 +63,10 @@ static bool getIndexOfKey(RamKeyValueStore_Handle me, uint16_t key, uint16_t* in
 bool set(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value value) //TODO: rename KeyValue_Value value to something more suiting
 {
     bool success = false;
+    if(key <= 0) //invalid key
+    {
+        return success;
+    }
     PrivateData* me = (PrivateData*)handle;
     assert(me != NULL);
     uint16_t index;
@@ -78,6 +82,10 @@ bool set(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value value) //TOD
 bool get(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value* value)
 {
     bool success = false;
+    if(key <= 0) //invalid key
+    {
+        return success;
+    }
     PrivateData* me = (PrivateData*)handle;
     assert(me != NULL);
     uint16_t index;
@@ -93,8 +101,18 @@ bool get(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value* value)
 bool RamKeyValueStore_add(RamKeyValueStore_Handle me, uint16_t key, KeyValue_Value initialValue)
 {
     bool success = false;
+    if(key <= 0) //invalid key
+    {
+        return success;
+    }
     uint16_t index;
-    if(getIndexOfKey(me, 0, &index) && key > 0) // key = 0 => field empty
+    // check if key already is used
+    if(getIndexOfKey(me, key, &index))
+    {
+        return success;
+    }
+    // search empty entry
+        if(getIndexOfKey(me, 0, &index)) // key = 0 => field empty
     {
         me->keyValueArray[index].key = key;
         me->keyValueArray[index].value = initialValue;

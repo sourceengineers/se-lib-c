@@ -32,7 +32,7 @@ typedef union __KeyValue_Data
     int32_t i32;
     uint16_t ui16;
     uint32_t ui32;
-    float  f;
+    float  f; //TODO: define how big
 }KeyValue_Data;
 
 typedef struct _KeyValue_Value
