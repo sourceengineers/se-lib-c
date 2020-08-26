@@ -38,7 +38,7 @@ RamKeyValueStore_Handle RamKeyValueStore_create(uint16_t numberOfKeys)
 
     // initialize private variables
     me->numberOfPairs = numberOfKeys;
-    me->keyValueArray = (KeyValue_Pair *) malloc(sizeof(KeyValue_Pair) * (numberOfKeys));
+    me->keyValueArray = calloc(numberOfKeys, sizeof(KeyValue_Pair));
     assert(me->keyValueArray != NULL);
     return me;
 }
