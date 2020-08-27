@@ -60,7 +60,7 @@ static bool getIndexOfKey(RamKeyValueStore_Handle me, uint16_t key, uint16_t* in
 }
 
 // set function
-bool set(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value value) //TODO: rename KeyValue_Value value to something more suiting
+static bool set(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value value)
 {
     bool success = false;
     if(key <= 0) //invalid key
@@ -79,7 +79,7 @@ bool set(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value value) //TOD
 }
 
 // get function
-bool get(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value* value)
+static bool get(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value* value)
 {
     bool success = false;
     if(key <= 0) //invalid key
