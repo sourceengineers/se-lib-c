@@ -8,7 +8,7 @@
  * @brief        TODO
  *
  *****************************************************************************************************************************************/
-#include "se-lib-c/osal/MockMutex.h"
+#include "MockMutex.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -23,14 +23,14 @@ static void unlock(IMutexHandle self);
 
 /** @} */
 
-void MockAdcMutex_init(MockMutexPrivateData* me)
+void MockMutex_init(MockMutexPrivateData* me)
 {
     // initialize interface
     me->parent.handle = me;
     me->parent.lock = &lock;
     me->parent.unlock = &unlock;
     me->isMutexLocked = false;
-    me->isMutexAvailable = false;
+    me->isMutexAvailable = true;
 }
 
 IMutex* MockMutex_getIMutexInterface(MockMutexPrivateData* me)
@@ -45,7 +45,7 @@ bool lock(IMutexHandle self, uint32_t timeout)
     assert(me != NULL);
     // TODO: timeout
     bool success = false;
-    if(me->isMutexAvailable)
+    if(me->isMutexAvailable && !(me->isMutexLocked))
     {
         me->isMutexLocked = true;
         success = true;
@@ -59,7 +59,7 @@ void unlock(IMutexHandle self)
     MockMutexPrivateData * me = (MockMutexPrivateData *)self;
     assert(me != NULL);
 
-    if(me->isMutexAvailable)
+    if(me->isMutexAvailable && me->isMutexLocked)
     {
         me->isMutexLocked = false;
     }

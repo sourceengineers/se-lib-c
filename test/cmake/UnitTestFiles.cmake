@@ -3,6 +3,7 @@ set(SE_LIB_C_MOCKS
         ${SE_LIB_C_TEST_DIR}/util/runnable/MockRunnable.c
         ${SE_LIB_C_TEST_DIR}/stream/MockByteStream.c
         ${SE_LIB_C_TEST_DIR}/driver/MockAdcDriver.c
+        ${SE_LIB_C_TEST_DIR}/osal/MockMutex.c
         )
 
 set(SE_LIB_C_UNIT_TESTS

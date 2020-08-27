@@ -12,6 +12,9 @@
 #ifndef THREADSAFEKEYVALUESTORE_H_
 #define THREADSAFEKEYVALUESTORE_H_
 
+#include "se-lib-c/keyValue/IKeyValueStore.h"
+#include "se-lib-c/osal/IMutex.h"
+
 
 /**
  * Declaration of the ThreadSafeKeyValueStore handle.
@@ -21,7 +24,13 @@ typedef struct ThreadSafeKeyValueStore_PrivateData* ThreadSafeKeyValueStore_Hand
 /**
  * Creates a ThreadSafeKeyValueStore instance.
  */
-ThreadSafeKeyValueStore_Handle ThreadSafeKeyValueStore_create(void);
+
+ThreadSafeKeyValueStore_Handle ThreadSafeKeyValueStore_create(IKeyValueStore* composite, IMutex* mutex);
+
+/**
+ * Returns a pointer to the IKeyValueStore.
+ */
+IKeyValueStore* Runnable_getIThreadSafeKeyValueStoreInterface(ThreadSafeKeyValueStore_Handle me);
 
 /**
  * Destroys a ThreadSafeKeyValueStore instance.
