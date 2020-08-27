@@ -12,7 +12,7 @@
 #ifndef RAMKEYVALUESTORE_H_
 #define RAMKEYVALUESTORE_H_
 
-#include "IKeyValueStore.h"
+#include "se-lib-c/keyValue/IKeyValueStore.h"
 #include "KeyValueTypes.h"
 #include <stdint.h>
 #include <stdbool.h>

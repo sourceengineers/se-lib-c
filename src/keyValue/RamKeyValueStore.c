@@ -7,7 +7,7 @@
  *
  *****************************************************************************************************************************************/
 
-#include "RamKeyValueStore.h"
+#include "se-lib-c/keyValue/RamKeyValueStore.h"
 #include <assert.h>
 #include <stdlib.h>
 

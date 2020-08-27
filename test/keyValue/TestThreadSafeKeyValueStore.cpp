@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-    #include "../../src/keyValue/ThreadSafeKeyValueStore.h"
-
+    #include "se-lib-c/keyValue/ThreadSafeKeyValueStore.h"
+    #include "se-lib-c/osal/MockMutex.h"
 }
 
 class ThreadSafeKeyValueStoreTest : public ::testing::Test

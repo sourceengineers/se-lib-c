@@ -9,7 +9,7 @@
  *
  *****************************************************************************************************************************************/
 
-#include "ThreadSafeKeyValueStore.h"
+#include "se-lib-c/keyValue/ThreadSafeKeyValueStore.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -18,7 +18,6 @@
 typedef struct ThreadSafeKeyValueStore_PrivateData
 {
 	uint16_t privateVariable;
-	bool mutex;
 } PrivateData;
 
 

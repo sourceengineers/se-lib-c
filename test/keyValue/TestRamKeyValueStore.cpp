@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-#include "../../src/keyValue/RamKeyValueStore.h"
+#include "se-lib-c/keyValue/RamKeyValueStore.h"
 }
 
 class RamKeyValueStoreTest : public ::testing::Test {
