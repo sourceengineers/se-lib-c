@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#define NUMBER_OF_ENTRIES 5u
 extern "C" {
 #include "se-lib-c/keyValue/RamKeyValueStore.h"
 }
@@ -12,7 +13,7 @@ protected:
 
     void SetUp() override {
         _ramKeyValueStore = RamKeyValueStore_create(
-                5u); // 5 corresponds to the number of types defined for KeyValue_Data
+                NUMBER_OF_ENTRIES);
         iKeyValueStore = Runnable_getIKeyValueStoreInterface(_ramKeyValueStore);
 
     }
@@ -48,7 +49,7 @@ TEST_F(RamKeyValueStoreTest, TestInt16)
     value_int16.type = KEY_TYPE_INT16;
     value_int16.data.i16 = kv_data.i16;
 
-    for (uint16_t key = 1u; key <= 5u; key++) // TODO: put 5u into a variable since it is both used here and when creating the array
+    for (uint16_t key = 1u; key <= NUMBER_OF_ENTRIES; key++)
     {
         // test add
         // add a int16 value with key
@@ -82,7 +83,7 @@ TEST_F(RamKeyValueStoreTest, TestInt32)
     value_int32.type = KEY_TYPE_INT32;
     value_int32.data.i32 = kv_data.i32;
 
-    for (uint16_t key = 1u; key <= 5u; key++) // TODO: put 5u into a variable since it is both used here and when creating the array
+    for (uint16_t key = 1u; key <= NUMBER_OF_ENTRIES; key++)
     {
         // test add
         // add a int32 value with key
@@ -116,7 +117,7 @@ TEST_F(RamKeyValueStoreTest, TestUInt16)
     value_uint16.type = KEY_TYPE_UINT16;
     value_uint16.data.ui16 = kv_data.ui16;
 
-    for (uint16_t key = 1u; key <= 5u; key++) // TODO: put 5u into a variable since it is both used here and when creating the array
+    for (uint16_t key = 1u; key <= NUMBER_OF_ENTRIES; key++)
     {
         // test add
         // add a uint16 value with key
@@ -150,7 +151,7 @@ TEST_F(RamKeyValueStoreTest, TestUInt32)
     value_uint32.type = KEY_TYPE_UINT32;
     value_uint32.data.ui32 = kv_data.ui32;
 
-    for (uint16_t key = 1u; key <= 5u; key++) // TODO: put 5u into a variable since it is both used here and when creating the array
+    for (uint16_t key = 1u; key <= NUMBER_OF_ENTRIES; key++)
     {
         // test add
         // add a uint32 value with key
@@ -184,7 +185,7 @@ TEST_F(RamKeyValueStoreTest, TestFloat)
     value_float.type = KEY_TYPE_FLOAT;
     value_float.data.f = kv_data.f;
 
-    for (uint16_t key = 1u; key <= 5u; key++) // TODO: put 5u into a variable since it is both used here and when creating the array
+    for (uint16_t key = 1u; key <= NUMBER_OF_ENTRIES; key++)
     {
         // test add
         // add a float value with key
@@ -239,13 +240,13 @@ TEST_F(RamKeyValueStoreTest, TestFullArray) {
     value_int16.type = KEY_TYPE_INT16;
     value_int16.data.i16 = kv_data.i16;
     // fill array
-    for (uint16_t key = 1u; key <= 5u; key++) // TODO: put 5u into a variable since it is both used here and when creating the array
+    for (uint16_t key = 1u; key <= NUMBER_OF_ENTRIES; key++)
     {
         // add a int16 value with key
         EXPECT_EQ(true, RamKeyValueStore_add(_ramKeyValueStore, key, value_int16));
     }
     // array is full, try to add another element
-    EXPECT_EQ(false, RamKeyValueStore_add(_ramKeyValueStore, 5u+1, value_int16)); // TODO: put 5u into a variable since it is both used here and when creating the array
+    EXPECT_EQ(false, RamKeyValueStore_add(_ramKeyValueStore, NUMBER_OF_ENTRIES+1, value_int16));
 }
 
 TEST_F(RamKeyValueStoreTest, TestKeyNotUnique) {
