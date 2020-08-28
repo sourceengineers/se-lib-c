@@ -1,9 +1,9 @@
 /*!****************************************************************************************************************************************
- * @file         Builder.c
+ * @file         ThreadSafeKeyValueBuilder.c
  *
- * @copyright    © by Source Engineers GmbH, 2019
+ * @copyright    © by Source Engineers GmbH, 2020
  *
- * @authors      Flurin Bühler <flurin.buehler@sourceengineers.com>
+ * @authors      Tobias Jäggi <tobias.jaeggi@sourceengineers.com>
  *
  *****************************************************************************************************************************************/
 
