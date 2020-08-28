@@ -21,9 +21,9 @@ protected:
         MockMutex_init(&_mockMutexPrivateData);
         _mutex = MockMutex_getIMutexInterface(&_mockMutexPrivateData);
         _ramKeyValueStore = RamKeyValueStore_create(NUMBER_OF_ENTRIES);
-        _iKeyValueStore = Runnable_getIKeyValueStoreInterface(_ramKeyValueStore);
+        _iKeyValueStore = RamKeyValueStore_getIKeyValueStoreInterface(_ramKeyValueStore);
         _threadSafeKeyValueStore = ThreadSafeKeyValueStore_create(_iKeyValueStore, _mutex);
-        _iKeyValueStore = Runnable_getIThreadSafeKeyValueStoreInterface(_threadSafeKeyValueStore);
+        _iKeyValueStore = ThreadSafeKeyValueStore_getIKeyValueStoreInterface(_threadSafeKeyValueStore);
     }
 
     void TearDown() override

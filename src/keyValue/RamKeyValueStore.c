@@ -121,7 +121,7 @@ bool RamKeyValueStore_add(RamKeyValueStore_Handle me, uint16_t key, KeyValue_Val
     return success;
 }
 
-IKeyValueStore* Runnable_getIKeyValueStoreInterface(RamKeyValueStore_Handle me)
+IKeyValueStore* RamKeyValueStore_getIKeyValueStoreInterface(RamKeyValueStore_Handle me)
 {
     assert(me != NULL);
     return &me->base;

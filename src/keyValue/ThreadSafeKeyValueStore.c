@@ -14,7 +14,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "se-lib-c/keyValue/ThreadSafeKeyValueStore.h"
-#include "se-lib-c/keyValue/KeyValueTypes.h"
 
 typedef struct ThreadSafeKeyValueStore_PrivateData
 {
@@ -37,9 +36,9 @@ ThreadSafeKeyValueStore_Handle ThreadSafeKeyValueStore_create(IKeyValueStore* co
     me->base.get = &get;
 
     me->composite = composite;
-    //TODO assert
+    assert(me->composite != NULL);
     me->mutex = mutex;
-    //TODO assert
+    assert(me->mutex != NULL);
 
     return me;
 }
@@ -74,7 +73,7 @@ static bool get(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value* valu
     return success;
 }
 
-IKeyValueStore* Runnable_getIThreadSafeKeyValueStoreInterface(ThreadSafeKeyValueStore_Handle me)
+IKeyValueStore* ThreadSafeKeyValueStore_getIKeyValueStoreInterface(ThreadSafeKeyValueStore_Handle me)
 {
     assert(me != NULL);
     return &me->base;

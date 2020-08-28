@@ -65,4 +65,3 @@ void unlock(IMutexHandle self)
     }
     me->numCallsUnlock++;
 }
-

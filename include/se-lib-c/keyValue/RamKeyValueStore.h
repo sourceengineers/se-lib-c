@@ -37,7 +37,7 @@ bool RamKeyValueStore_add(RamKeyValueStore_Handle me, uint16_t key, KeyValue_Val
 /**
  * Returns a pointer to the IKeyValueStore.
  */
-IKeyValueStore* Runnable_getIKeyValueStoreInterface(RamKeyValueStore_Handle me);
+IKeyValueStore* RamKeyValueStore_getIKeyValueStoreInterface(RamKeyValueStore_Handle me);
 
 /**
  * Destroys a RamKeyValueStore instance.

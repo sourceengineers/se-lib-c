@@ -14,7 +14,7 @@ protected:
     void SetUp() override {
         _ramKeyValueStore = RamKeyValueStore_create(
                 NUMBER_OF_ENTRIES);
-        iKeyValueStore = Runnable_getIKeyValueStoreInterface(_ramKeyValueStore);
+        iKeyValueStore = RamKeyValueStore_getIKeyValueStoreInterface(_ramKeyValueStore);
 
     }
 

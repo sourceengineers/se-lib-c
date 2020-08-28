@@ -30,7 +30,7 @@ ThreadSafeKeyValueStore_Handle ThreadSafeKeyValueStore_create(IKeyValueStore* co
 /**
  * Returns a pointer to the IKeyValueStore.
  */
-IKeyValueStore* Runnable_getIThreadSafeKeyValueStoreInterface(ThreadSafeKeyValueStore_Handle me);
+IKeyValueStore* ThreadSafeKeyValueStore_getIKeyValueStoreInterface(ThreadSafeKeyValueStore_Handle me);
 
 /**
  * Destroys a ThreadSafeKeyValueStore instance.
