@@ -15,7 +15,6 @@
 
 #include <stdint.h>
 
-
 typedef enum __KeyValue_KeyType
 {
     KEY_TYPE_NONE = 0,

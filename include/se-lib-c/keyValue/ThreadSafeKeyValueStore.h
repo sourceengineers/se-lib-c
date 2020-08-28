@@ -25,7 +25,7 @@ typedef struct ThreadSafeKeyValueStore_PrivateData* ThreadSafeKeyValueStore_Hand
  * Creates a ThreadSafeKeyValueStore instance.
  */
 
-ThreadSafeKeyValueStore_Handle ThreadSafeKeyValueStore_create(IKeyValueStore* composite, IMutex* mutex);
+ThreadSafeKeyValueStore_Handle ThreadSafeKeyValueStore_create(IKeyValueStore* composite, const IMutex* mutex);
 
 /**
  * Returns a pointer to the IKeyValueStore.

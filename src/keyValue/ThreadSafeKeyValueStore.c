@@ -19,13 +19,13 @@ typedef struct ThreadSafeKeyValueStore_PrivateData
 {
     IKeyValueStore base;
     IKeyValueStore* composite;
-    IMutex* mutex;
+    const IMutex* mutex;
 } PrivateData;
 
 static bool set(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value value);
 static bool get(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value* value);
 
-ThreadSafeKeyValueStore_Handle ThreadSafeKeyValueStore_create(IKeyValueStore* composite, IMutex* mutex)
+ThreadSafeKeyValueStore_Handle ThreadSafeKeyValueStore_create(IKeyValueStore* composite, const IMutex* mutex)
 {
     PrivateData* me = malloc(sizeof(PrivateData));
     assert(me != NULL);
@@ -51,9 +51,8 @@ static bool set(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value value
     bool success = false;
     if(me->mutex->lock(me->mutex->handle,10))
     {
-        me->composite->set(me->composite, key, value);
+        success = me->composite->set(me->composite, key, value);
         me->mutex->unlock(me->mutex->handle);
-        success = true;
     }
     return success;
 }
@@ -66,9 +65,8 @@ static bool get(IKeyValueStore_Handle handle, uint16_t key, KeyValue_Value* valu
     bool success = false;
     if(me->mutex->lock(me->mutex->handle,10))
     {
-        me->composite->get(me->composite, key, value);
+        success = me->composite->get(me->composite, key, value);
         me->mutex->unlock(me->mutex->handle);
-        success = true;
     }
     return success;
 }
