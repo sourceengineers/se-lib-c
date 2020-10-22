@@ -32,7 +32,7 @@ typedef struct __ThreadSafeByteStreamPrivateData* ThreadSafeByteStreamHandle;
  * @param capacity size of the buffer
  * @return
  */
-ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutex mutex, IByteStream streamToProtect);
+ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByteStream streamToProtect);
 
 /**
  * Returns the stream interface

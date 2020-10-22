@@ -24,7 +24,7 @@ typedef struct __ThreadSafeByteStreamPrivateData
 {
     IByteStream parent;
     IMutexHandle mutex;
-    ICompositeHandle composite;
+//    ICompositeHandle composite;
 } ThreadSafeByteStreamPrivateData;
 
 /******************************************************************************
@@ -36,32 +36,39 @@ typedef struct __ThreadSafeByteStreamPrivateData
  Public functions
 ******************************************************************************/
 
-void write(ThreadSafeByteStreamHandle me)
+// TODO with composite composite
+void write(ThreadSafeByteStreamHandle me, const uint8_t* data, const size_t length)
 {
-    //TODO adjust timeout
-    if(me->mutex->lock(me->mutex, 0x10))
+    if(me->mutex->lock(me->mutex, 0xFF))
     {
-        me->composite->write(me->composite);
+//        me->composite->write(me->composite)
+        me->parent.write(me->parent.handle, data, length);
         me->mutex->unlock(me->mutex);
     }
 }
 
 
-void read(ThreadSafeByteStreamHandle me)
+void read(ThreadSafeByteStreamHandle me, uint8_t* data, const size_t length)
 {
-    if(me->mutex->lock(me->mutex, 0x10))
+    if(me->mutex->lock(me->mutex, 0xFF))
     {
-        me->composite->read(me->composite);
+//        me->composite->read(me->composite);
+        me->parent.read(me->parent.handle, data, length);
         me->mutex->unlock(me->mutex);
     }
 }
 
 
-ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutex mutex, IByteStream streamToProtect)
+ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByteStream streamToProtect)
 {
     ThreadSafeByteStreamHandle me = (ThreadSafeByteStreamHandle) malloc(sizeof(ThreadSafeByteStreamPrivateData));
     assert(me);
-    //TODO
+
+    me->mutex = mutex;
+
+    me->parent = streamToProtect;
+    me->parent.write = &write;
+    me->parent.read = &read;
     return me;
 }
 
