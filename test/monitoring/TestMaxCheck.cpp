@@ -97,3 +97,4 @@ TEST_F(MaxCheckTest, InactiveMaxCheckOperation)
         EXPECT_EQ(true,_checkable->isCheckOk(_checkable));
     }
 }
+

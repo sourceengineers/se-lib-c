@@ -9,32 +9,30 @@
  *
  *****************************************************************************************************************************************/
 
-#ifndef MOCKADCDRIVER_H_
-#define MOCKADCDRIVER_H_
+#ifndef MOCKBYTESTREAM_H_
+#define MOCKBYTESTREAM_H_
 
+#include <se-lib-c/stream/IByteStream.h>
 #include <stdint.h>
-#include <se-lib-c/driver/IAdcDriver.h>
 
-#define NUMBER_OF_ADC_CHANNELS 6
+#define STRING_BUFFER_SIZE 256
 /**
  * Declaration of the mock object.
  */
-typedef struct __MockAdcDriverPrivateData
+typedef struct __MockByteStreamPrivateData
 {
-	IAdcDriver parent;
-	uint16_t analogValue[NUMBER_OF_ADC_CHANNELS];
-} MockAdcDriverPrivateData;
-
+	IByteStream parent;
+	char stringBuffer[STRING_BUFFER_SIZE];
+} MockByteStream;
 
 /**
- * initialize a MockAdcDriver instance.
+ * initialize a MockByteStream instance.
  */
-void MockAdcDriver_init(MockAdcDriverPrivateData* me);
+void MockByteStream_init(MockByteStream* me);
 
 /**
- * Returns a pointer to the IAdcDriver.
+ * Returns a pointer to the IBytestream.
  */ 
-IAdcDriver* MockAdcDriver_getIAdcDriverInterface(MockAdcDriverPrivateData* me);
+IByteStream* MockByteStream_getBytestreamInterface(MockByteStream* me);
 
-
-#endif // MOCKADCDRIVER_H_
+#endif // MOCKBYTESTREAM_H_

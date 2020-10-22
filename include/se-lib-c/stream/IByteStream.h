@@ -62,7 +62,7 @@ typedef struct IByteStreamStruct{
      * @param self
      * @param data
      */
-    void (* writeByte)(IByteStreamHandle self, const uint8_t data);
+    bool (* writeByte)(IByteStreamHandle self, const uint8_t data);
 
     /**
      * Writes multiple data points into the stream
@@ -70,7 +70,7 @@ typedef struct IByteStreamStruct{
      * @param data Data that has to be written into the stream
      * @param length Amount of data that has to be written into the stream
      */
-    void (* write)(IByteStreamHandle self, const uint8_t* data, const size_t length);
+    bool (* write)(IByteStreamHandle self, const uint8_t* data, const size_t length);
 
     /**
      * Flushes the stream

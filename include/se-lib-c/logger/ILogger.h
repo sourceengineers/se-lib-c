@@ -10,6 +10,8 @@
  *
  ******************************************************************************/
 
+#ifndef ILOGGER_H_
+#define ILOGGER_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
 
@@ -17,7 +19,7 @@
  Define interface handle data
 ******************************************************************************/
 typedef struct ILoggerStruct* ILoggerHandle;
-typedef enum severity {SE_SCOPE_INFO, SE_SCOPE_DEBUG, SE_SCOPE_WARNING, SE_SCOPE_ERROR} SEVERITY;
+typedef enum severity {INFO, DEBUG, WARNING, ERROR} SEVERITY;       //TODO change to unique names
 
 /******************************************************************************
  Define interface
@@ -33,6 +35,4 @@ typedef struct ILoggerStruct{
  void (* log)(ILoggerHandle logger, SEVERITY severity, const char* msg);
 
 } ILogger;
-
-
-
+#endif
