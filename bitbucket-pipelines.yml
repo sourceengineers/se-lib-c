@@ -1,14 +1,15 @@
-# This is a sample build configuration for C++ – Make.
-# Check our guides at https://confluence.atlassian.com/x/5Q4SMw for more examples.
-# Only use spaces to indent your .yml configuration.
-# -----
-# You can specify a custom docker image from Docker Hub as your build environment.
-image: gcc:6.5
+image: gcc:latest
 
 pipelines:
   default:
     - step:
         script: # Modify the commands below to build your repository.
-          - ./configure
-          - make
-          - make test
+          - apt update
+          - apt install cmake -y
+          - git submodule update --init
+          - mkdir build
+          - cd build
+          - cmake ..
+          - make se-lib-c-test
+          - export GTEST_OUTPUT="xml:test-results/test-results.xml"
+          - ./test/se-lib-c-test
