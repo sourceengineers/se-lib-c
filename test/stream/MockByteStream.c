@@ -22,7 +22,11 @@ bool mockWrite(IByteStreamHandle handle, const uint8_t* data, const size_t lengt
         return false;
     }
     // Return a buffer overflow when this message is logged
-    if(strcmp(data, "WARNING: TEST_BUFFER_OVERFLOW_1234567890") == 0)
+    if(strcmp(data, "WARNING: test_buffer_overflow_OVFL") == 0)
+    {
+        return false;
+    }// Return a buffer overflow when this message is logged
+    else if(strcmp(data, "WARNING: ShrtOvfl") == 0)
     {
         return false;
     }

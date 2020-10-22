@@ -73,7 +73,14 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg )
     char separating_seq[] = ": ";       // sequence between severity and log message
     char *severity_string = loggerPrepareSeverity(severity);
 
-    if (self->logBuffer != NULL) {
+    // hier mutex lock
+
+    // funktion reentrant machen mit
+//    char logBufferLocal[50];
+//    strcpy(logBufferLocal, self->logBuffer);
+
+    if (self->logBuffer != NULL)
+    {
         strcpy(self->logBuffer, severity_string);
         strcat(self->logBuffer, separating_seq);
         uint32_t lengthOfCurrentMessage = strlen(msg)+strlen(separating_seq)+strlen(severity_string);
@@ -90,10 +97,16 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg )
         if(self->byteStream &&
            !self->byteStream->write(self->byteStream, self->logBuffer, lengthOfCurrentMessage))
         {  /* Buffer Overflow */
-            //TODO instead of replacing the contens, add buf ovfl at the end
-            strcpy(self->logBuffer, "SCOPE BUF OVFL;");
+            if(lengthOfCurrentMessage<strlen("SCOPE BUF OVFL;")){
+                strcpy(self->logBuffer, "SCOPE BUF OVFL;");
+            }
+            else{
+                strncpy(self->logBuffer + (lengthOfCurrentMessage-strlen("SCOPE BUF OVFL;")), "SCOPE BUF OVFL;", strlen("SCOPE BUF OVFL;"));
+            }
         }
     }
+
+    // mutex freigeben
 }
 
 #ifdef UNIT_TEST

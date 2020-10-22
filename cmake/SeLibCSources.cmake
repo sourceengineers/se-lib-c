@@ -10,6 +10,7 @@ set(SE_LIB_C_SOURCES
 		${SE_LIB_C_SOURCE_DIR}/stream/BufferedByteStream.c
 		${SE_LIB_C_SOURCE_DIR}/stream/BufferedFloatStream.c
 		${SE_LIB_C_SOURCE_DIR}/stream/BufferedIntStream.c
+		${SE_LIB_C_SOURCE_DIR}/stream/ThreadSafeByteStream.c
 		${SE_LIB_C_SOURCE_DIR}/util/runnable/RunnableList.c
 )
 

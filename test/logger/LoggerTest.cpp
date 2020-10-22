@@ -77,9 +77,17 @@ TEST_F(LoggerTest, LongMessage)
 
 TEST_F(LoggerTest, BufferOverflow)
 {
-    const char bufferOverflowMsg[] = "TEST_BUFFER_OVERFLOW_1234567890";
+    const char bufferOverflowMsg[] = "test_buffer_overflow_OVFL";
     iLoggerHandle->log(iLoggerHandle, log_severity, bufferOverflowMsg);
-    EXPECT_STREQ("SCOPE BUF OVFL;",Logger_getBuffer(loggerHandle));
+    EXPECT_STREQ("WARNING: test_buffeSCOPE BUF OVFL;",Logger_getBuffer(loggerHandle));
+}
+
+
+TEST_F(LoggerTest, BufferOverflowShort)
+{
+    const char bufferOverflowMsg[] = "ShrtOvfl";
+    iLoggerHandle->log(iLoggerHandle, log_severity, bufferOverflowMsg);
+    EXPECT_STREQ("WASCOPE BUF OVFL;",Logger_getBuffer(loggerHandle));
 }
 
 
