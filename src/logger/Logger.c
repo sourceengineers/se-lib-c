@@ -6,8 +6,9 @@
  * @authors      Benjamin Rupp  benjamin.rupp@sourceengineers.com
  *
  *****************************************************************************************************************************************/
-#include <se-lib-c/logger/Logger.h>
-#include <se-lib-c/stream/IByteStream.h>
+#include "se-lib-c/logger/Logger.h"
+#include "se-lib-c/stream/IByteStream.h"
+//#include <se-lib-c/stream/ThreadSafeByteStream.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -76,7 +77,6 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg )
     // hier mutex lock
 
     // funktion reentrant machen mit
-//    char logBufferLocal[50];
 //    strcpy(logBufferLocal, self->logBuffer);
 
     if (self->logBuffer != NULL)
@@ -107,6 +107,15 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg )
     }
 
     // mutex freigeben
+
+	//   TODO hier sc_log setzen ähnlich wie in CommandAnnounce, damit bekannt gegeben wird, dass eine log-nachricht bereit ist.
+	//    Oder einfach Scope_log() aufrufen? Macht genau das.
+	//    self
+	//    CommandAnnounceHandle self = (CommandAnnounceHandle) command->handle;
+	//    MessageType packType = SC_LOG;
+	//    self->
+	//    self->packObserver->update(self->packObserver, &packType);
+
 }
 
 #ifdef UNIT_TEST
