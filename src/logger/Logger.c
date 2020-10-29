@@ -4,11 +4,12 @@
  * @copyright    Copyright (c) 2019 by Sourceengineers. All Rights Reserved.
  *
  * @authors      Benjamin Rupp  benjamin.rupp@sourceengineers.com
+ * 			     Anselm Fuhrer  anselm.fuhrer@sourceengineers.com
  *
  *****************************************************************************************************************************************/
 #include "se-lib-c/logger/Logger.h"
 #include "se-lib-c/stream/IByteStream.h"
-//#include <se-lib-c/stream/ThreadSafeByteStream.h>
+#include "se-lib-c/stream/ThreadSafeByteStream.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -69,52 +70,56 @@ ILoggerHandle Logger_getILogger(LoggerHandle self)
     return &self->loggerBase;
 }
 
-static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg )
+static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg)
 {
     char separating_seq[] = ": ";       // sequence between severity and log message
     char *severity_string = loggerPrepareSeverity(severity);
 
-    // hier mutex lock
+    // hier mutex-lock
 
     // funktion reentrant machen mit
+    char logBufferLocal[50];
 //    strcpy(logBufferLocal, self->logBuffer);
 
     if (self->logBuffer != NULL)
     {
-        strcpy(self->logBuffer, severity_string);
-        strcat(self->logBuffer, separating_seq);
+        strcpy(logBufferLocal, severity_string);
+        strcat(logBufferLocal, separating_seq);
         uint32_t lengthOfCurrentMessage = strlen(msg)+strlen(separating_seq)+strlen(severity_string);
         if (lengthOfCurrentMessage < self->logMessageSize)
         {
-            strcat(self->logBuffer, msg);
+            strcat(logBufferLocal, msg);
         }
         else    /* string is too long, must be shortened */
         {
             lengthOfCurrentMessage = self->logMessageSize;
-            strncat(self->logBuffer, msg, self->logMessageSize - strlen(severity_string) - strlen(separating_seq));
+            strncat(logBufferLocal, msg, self->logMessageSize - strlen(severity_string) - strlen(separating_seq));
         }
 
         if(self->byteStream &&
-           !self->byteStream->write(self->byteStream, self->logBuffer, lengthOfCurrentMessage))
+           !self->byteStream->write(self->byteStream, logBufferLocal, lengthOfCurrentMessage))
         {  /* Buffer Overflow */
             if(lengthOfCurrentMessage<strlen("SCOPE BUF OVFL;")){
-                strcpy(self->logBuffer, "SCOPE BUF OVFL;");
+                strcpy(logBufferLocal, "SCOPE BUF OVFL;");
             }
             else{
-                strncpy(self->logBuffer + (lengthOfCurrentMessage-strlen("SCOPE BUF OVFL;")), "SCOPE BUF OVFL;", strlen("SCOPE BUF OVFL;"));
+                strncpy(logBufferLocal + (lengthOfCurrentMessage-strlen("SCOPE BUF OVFL;")), "SCOPE BUF OVFL;", strlen("SCOPE BUF OVFL;"));
             }
         }
+//        strcpy(self->logBuffer, logBufferLocal);	//TODO this is not reentrant, is it? If not, how can i make it
+        strcpy(self->logBuffer, "AAAAAAAAAAAA");
     }
 
     // mutex freigeben
 
-	//   TODO hier sc_log setzen ähnlich wie in CommandAnnounce, damit bekannt gegeben wird, dass eine log-nachricht bereit ist.
+	//    TODO hier sc_log setzen ähnlich wie in CommandAnnounce, damit bekannt gegeben wird, dass eine log-nachricht bereit ist.
 	//    Oder einfach Scope_log() aufrufen? Macht genau das.
 	//    self
 	//    CommandAnnounceHandle self = (CommandAnnounceHandle) command->handle;
 	//    MessageType packType = SC_LOG;
 	//    self->
 	//    self->packObserver->update(self->packObserver, &packType);
+
 
 }
 
