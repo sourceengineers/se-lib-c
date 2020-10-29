@@ -41,7 +41,7 @@ void write(ThreadSafeByteStreamHandle me, const uint8_t* data, const size_t leng
 {
     if(me->mutex->lock(me->mutex, 0xFF))
     {
-//        me->composite->write(me->composite)
+//    	me->composite->write(me->composite)
         me->parent.write(me->parent.handle, data, length);
         me->mutex->unlock(me->mutex);
     }
