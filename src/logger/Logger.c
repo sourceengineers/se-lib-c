@@ -106,6 +106,8 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg )
         }
     }
 
+    strcpy(self->logBuffer, "BBBBBBBBB");
+
     // mutex freigeben
 }
 

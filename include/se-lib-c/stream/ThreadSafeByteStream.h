@@ -9,8 +9,8 @@
  *
  ******************************************************************************/
 
-#ifndef BYTESTREAM_H_
-#define BYTESTREAM_H_
+#ifndef THREADSAFEBYTESTREAM_H_
+#define THREADSAFEBYTESTREAM_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
 #include <se-lib-c/stream/IByteStream.h>
@@ -32,7 +32,7 @@ typedef struct __ThreadSafeByteStreamPrivateData* ThreadSafeByteStreamHandle;
  * @param capacity size of the buffer
  * @return
  */
-ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByteStream streamToProtect);
+ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByteStreamHandle streamToProtect);
 
 /**
  * Returns the stream interface
@@ -47,4 +47,4 @@ IByteStreamHandle ThreadSafeByteStream_getIByteStream(ThreadSafeByteStreamHandle
  */
 void ThreadSafeByteStream_destroy(ThreadSafeByteStreamHandle self);
 
-#endif
+#endif //THREADSAFEBYTESTREAM_H_

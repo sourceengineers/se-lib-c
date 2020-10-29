@@ -59,14 +59,14 @@ void read(ThreadSafeByteStreamHandle me, uint8_t* data, const size_t length)
 }
 
 
-ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByteStream streamToProtect)
+ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByteStreamHandle streamToProtect)
 {
     ThreadSafeByteStreamHandle me = (ThreadSafeByteStreamHandle) malloc(sizeof(ThreadSafeByteStreamPrivateData));
     assert(me);
 
     me->mutex = mutex;
 
-    me->parent = streamToProtect;
+    me->parent.handle = streamToProtect;
     me->parent.write = &write;
     me->parent.read = &read;
     return me;
