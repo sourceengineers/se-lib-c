@@ -6,17 +6,29 @@
  * @authors      Benjamin Rupp  benjamin.rupp@sourceengineers.com
  *
  *****************************************************************************************************************************************/
-#include <se-lib-c/logger/LoggerBuilder.h>
+
 #include <stdlib.h>
+#include <assert.h>
+#include <Scope/GeneralPurpose/IMutex.h>
+#include <se-lib-c/logger/LoggerBuilder.h>
+#include <se-lib-c/stream/BufferedByteStream.h>
+#include <se-lib-c/stream/ThreadSafeByteStream.h>
 
 /******************************************************************************
  Define private data
 ******************************************************************************/
 typedef struct __LoggerBuilderPrivateData{
-    IByteStreamHandle streamer;
-    LoggerHandle  logger;
+    LoggerHandle logger;
+    IByteStreamHandle loggerBufferByteStream;
+    BufferedByteStreamHandle loggerBuffer;
+    ThreadSafeByteStreamHandle tsLoggerBuffer;
+    IMutexHandle mutex;
     size_t bufferSize;
 } LoggerBuilderPrivateData;
+
+// the builder is a singleton
+//static LoggerBuilderPrivateData me;
+
 /******************************************************************************
  Private functions
 ******************************************************************************/
@@ -25,37 +37,69 @@ typedef struct __LoggerBuilderPrivateData{
  Public functions
 ******************************************************************************/
 LoggerBuilderHandle LoggerBuilder_create(void){
+    LoggerBuilderHandle me = malloc(sizeof(LoggerBuilderPrivateData));
 
-    LoggerBuilderHandle self = malloc(sizeof(LoggerBuilderPrivateData));
-
-    self->logger = NULL;
-    self->streamer = NULL;
-
-    return self;
+    me->logger = NULL;
+    me->loggerBufferByteStream = NULL;
+    me->loggerBuffer = NULL;
+    me->tsLoggerBuffer = NULL;
+    me->mutex = NULL;
+    return me;
 }
 
-void LoggerBuilder_setBufferSize(LoggerBuilderHandle self, size_t bufferSize){
-    self->bufferSize = bufferSize;
+void LoggerBuilder_setBufferSize(LoggerBuilderHandle me, size_t bufferSize){
+    me->bufferSize = bufferSize;
 }
 
-LoggerObject LoggerBuilder_build(LoggerBuilderHandle self){
-
-    LoggerObject obj;
-
-    //self->logger = Logger_create( self->bufferSize );
-    obj.logger = Logger_getILogger(self->logger);
-
-    return  obj;
+void LoggerBuilder_setLoggerBuffer(LoggerBuilderHandle me, BufferedByteStreamHandle loggerBuffer){
+	me->loggerBuffer = loggerBuffer;
 }
 
-char* LoggerBuilder_getBuffer(LoggerBuilderHandle self){
-    return Logger_getBuffer(self->logger);
+void LoggerBuilder_setMutex(LoggerBuilderHandle me, IMutexHandle mutex){
+	me->mutex = mutex;
 }
 
-void LoggerBuilder_destroy(LoggerBuilderHandle self){
-    LoggerDestroy(self->logger);
+void LoggerBuilder_setThreadSafeByteStream(LoggerBuilderHandle me, ThreadSafeByteStreamHandle tsLoggerBuffer){
+	me->tsLoggerBuffer = tsLoggerBuffer;
 }
 
-void LoggerBuilder_setStream(LoggerBuilderHandle self, IByteStreamHandle streamer){
-    self->streamer = streamer;
+//LoggerObject LoggerBuilder_build(size){
+
+void LoggerBuilder_build(LoggerBuilderHandle me){
+	assert(me->loggerBuffer);
+	me->loggerBufferByteStream = BufferedByteStream_getIByteStream(me->loggerBuffer);
+	assert(me->loggerBufferByteStream);
+
+    me->logger = Logger_create(me->bufferSize, me->loggerBufferByteStream);
+	assert(me->logger);
 }
+
+//LoggerObject LoggerBuilder_buildThreadSafe(LoggerBuilderHandle me){
+
+void LoggerBuilder_buildThreadSafe(LoggerBuilderHandle me){
+	assert(me->loggerBuffer);
+	assert(me->mutex);
+
+	me->loggerBufferByteStream = ThreadSafeByteStream_getIByteStream(me->loggerBuffer);
+	assert(me->loggerBufferByteStream);
+	me->tsLoggerBuffer = ThreadSafeByteStream_create(me->mutex, me->loggerBufferByteStream);
+	assert(me->tsLoggerBuffer);
+}
+
+char* LoggerBuilder_getBuffer(LoggerBuilderHandle me){
+    return Logger_getBuffer(me->logger);
+}
+
+IByteStreamHandle LoggerBuilder_getILoggerBufferHandle(LoggerBuilderHandle me){
+	return me->loggerBufferByteStream;
+}
+
+ILoggerHandle LoggerBuilder_getILoggerHandle(LoggerBuilderHandle me){
+	return Logger_getILogger(me->logger);
+}
+
+
+void LoggerBuilder_destroy(LoggerBuilderHandle me){
+    LoggerDestroy(me->logger);
+}
+

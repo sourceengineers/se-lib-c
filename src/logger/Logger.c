@@ -107,7 +107,6 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg)
             }
         }
 //        strcpy(self->logBuffer, logBufferLocal);	//TODO this is not reentrant, is it? If not, how can i make it
-        strcpy(self->logBuffer, "AAAAAAAAAAAA");
     }
 
     strcpy(self->logBuffer, "BBBBBBBBB");

@@ -14,6 +14,8 @@
 
 #include <se-lib-c/logger/Logger.h>
 #include <se-lib-c/stream/IByteStream.h>
+#include <se-lib-c/stream/BufferedByteStream.h>
+#include <se-lib-c/stream/ThreadSafeByteStream.h>
 
 
 /******************************************************************************
@@ -25,57 +27,38 @@ typedef struct __LoggerBuilderPrivateData* LoggerBuilderHandle;
 /******************************************************************************
  Define Interface
 ******************************************************************************/
-typedef struct LoggerObjectStruct{
 
-    ILoggerHandle logger;
-
-} LoggerObject;
 /******************************************************************************
  Public functions 
 ******************************************************************************/
-/**
- * Constructor
- * @param 
- * @return LoggerBuilderHandle
- */
+
 LoggerBuilderHandle LoggerBuilder_create(void);
 
-/**
- * Set the buffer size of the message buffer
- * @param bufferSize
- */
-void LoggerBuilder_setBufferSize(LoggerBuilderHandle self, size_t bufferSize);
+void LoggerBuilder_setBufferSize(LoggerBuilderHandle me, size_t bufferSize);
 
-/**
- * Builds the logger and return an object
- * @param self
- * @return LoggerObject
- */
-LoggerObject LoggerBuilder_build(LoggerBuilderHandle self);
+void LoggerBuilder_setLoggerBuffer(LoggerBuilderHandle me, BufferedByteStreamHandle loggerBuffer);
 
-/**
- * Builds the logger and return an object
- * @param self
- * @return char* buffer of the current message
- */
-char* LoggerBuilder_getBuffer(LoggerBuilderHandle self);
+void LoggerBuilder_setMutex(LoggerBuilderHandle me, IMutexHandle mutex);
 
-/**
- * Returns the content of the ByteStream
- * @param self
- */
-char* LoggerBuilder_getBufferedByteStream(LoggerBuilderHandle self);
+void LoggerBuilder_setThreadSafeByteStream(LoggerBuilderHandle me, ThreadSafeByteStreamHandle tsLoggerBuffer);
 
-/**
- * Builds the logger and return an object
- * @param self
- * @param output
- */
-void LoggerBuilder_setStream(LoggerBuilderHandle self, IByteStreamHandle output);
+void LoggerBuilder_buildThreadSafe(LoggerBuilderHandle me);
+
+void LoggerBuilder_build(LoggerBuilderHandle me);
+
+char* LoggerBuilder_getBuffer(LoggerBuilderHandle me);
+
+char* LoggerBuilder_getBufferedByteStream(LoggerBuilderHandle me);
+
+IByteStreamHandle LoggerBuilder_getILoggerBufferHandle(LoggerBuilderHandle me);
+
+ILoggerHandle LoggerBuilder_getILoggerHandle(LoggerBuilderHandle me);
+
+
 /**
  * Deconstructor
- * @param self
+ * @param me
  */
-void LoggerBuilder_destroy(LoggerBuilderHandle self);
+void LoggerBuilder_destroy(LoggerBuilderHandle me);
 
 #endif //SE_SCOPE_LOGGERBUILDER_H
