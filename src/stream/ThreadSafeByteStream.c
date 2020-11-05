@@ -24,7 +24,7 @@ typedef struct __ThreadSafeByteStreamPrivateData
 {
     IByteStream parent;
     IMutexHandle mutex;
-//    ICompositeHandle composite;
+    IByteStream* composite;
 } ThreadSafeByteStreamPrivateData;
 
 /******************************************************************************
@@ -32,44 +32,123 @@ typedef struct __ThreadSafeByteStreamPrivateData
 ******************************************************************************/
 
 
+static bool byteIsReady(IByteStreamHandle self)
+{
+	bool success = false;
+	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+	if(me->mutex->lock(me->mutex, 0xFF))
+	{
+		success = me->composite->byteIsReady(me->composite);
+		me->mutex->unlock(me->mutex);
+	}
+
+	return success;
+}
+
+static uint8_t readByte(IByteStreamHandle self)
+{
+	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+	uint8_t readValue;
+	if(me->mutex->lock(me->mutex, 0xFF))
+	{
+		readValue = me->composite->readByte(me->composite);
+		me->mutex->unlock(me->mutex);
+	}
+	return readValue;
+}
+
+static size_t length(IByteStreamHandle self)
+{
+	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+	size_t length;
+	if(me->mutex->lock(me->mutex, 0xFF))
+	{
+		me->composite->length(me->composite);
+		me->mutex->unlock(me->mutex);
+	}
+	return length;
+}
+
+static bool writeByte(IByteStreamHandle self, const uint8_t data)
+{
+	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+	bool success = false;
+	if(me->mutex->lock(me->mutex, 0xFF))
+	{
+		success = me->composite->writeByte(me->composite, data);
+		me->mutex->unlock(me->mutex);
+	}
+	return success;
+}
+
+static void flush(IByteStreamHandle self)
+{
+	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+	if(me->mutex->lock(me->mutex, 0xFF))
+	{
+		me->composite->flush(me->composite);
+		me->mutex->unlock(me->mutex);
+	}
+}
+
+static size_t capacity (IByteStreamHandle self)
+{
+	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+	size_t capacity;
+	if(me->mutex->lock(me->mutex, 0xFF))
+	{
+		capacity = me->composite->capacity(me->composite);
+		me->mutex->unlock(me->mutex);
+	}
+	return capacity;
+}
+
+static bool write(IByteStreamHandle self, const uint8_t* data, const size_t length)
+{
+	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+	bool success = false;
+    if(me->mutex->lock(me->mutex, 0xFF))
+    {
+    	success = me->composite->write(me->composite, data, length);
+        me->mutex->unlock(me->mutex);
+    }
+    return success;
+}
+
+static void read(IByteStreamHandle self, uint8_t* data, const size_t length)
+{
+	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+    if(me->mutex->lock(me->mutex, 0xFF))
+    {
+		me->composite->read(me->composite, data, length);
+        me->mutex->unlock(me->mutex);
+    }
+}
+
+
+
 /******************************************************************************
  Public functions
 ******************************************************************************/
 
-// TODO with composite composite
-void write(ThreadSafeByteStreamHandle me, const uint8_t* data, const size_t length)
-{
-    if(me->mutex->lock(me->mutex, 0xFF))
-    {
-    	//TODO is just the naming wrong or is the programming wrong?
-//    	me->composite->write(me->composite)
-        me->parent.write(me->parent.handle, data, length);
-        me->mutex->unlock(me->mutex);
-    }
-}
-
-
-void read(ThreadSafeByteStreamHandle me, uint8_t* data, const size_t length)
-{
-    if(me->mutex->lock(me->mutex, 0xFF))
-    {
-//        me->composite->read(me->composite);
-        me->parent.read(me->parent.handle, data, length);
-        me->mutex->unlock(me->mutex);
-    }
-}
-
-
-ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByteStreamHandle streamToProtect)
+ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByteStream* streamToProtect)
 {
     ThreadSafeByteStreamHandle me = (ThreadSafeByteStreamHandle) malloc(sizeof(ThreadSafeByteStreamPrivateData));
     assert(me);
 
     me->mutex = mutex;
+    me->composite = streamToProtect;
 
-    me->parent.handle = streamToProtect;
-    me->parent.write = &write;
+    me->parent.handle = me;
     me->parent.read = &read;
+    me->parent.write = &write;
+    me->parent.capacity = &capacity;
+    me->parent.flush = &flush;
+    me->parent.writeByte = &writeByte;
+    me->parent.length = &length;
+    me->parent.readByte = &readByte;
+    me->parent.byteIsReady = &byteIsReady;
+
     return me;
 }
 

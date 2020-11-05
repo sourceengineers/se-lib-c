@@ -33,7 +33,7 @@ typedef struct __LoggerPrivateData
 } LoggerPrivateData;
 
 static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg);
-static bool loggerStreamLogMessage(IByteStreamHandle stream,LoggerHandle self);
+//static bool loggerStreamLogMessage(IByteStreamHandle stream, LoggerHandle self);		//TODO is this needed?
 static char* loggerPrepareSeverity(SEVERITY severity);
 /******************************************************************************
  Private functions
@@ -60,7 +60,7 @@ LoggerHandle Logger_create(size_t logMessageSize, IByteStreamHandle byteStream)
 
     // setup the base-class (ILog interface)
     self->loggerBase.handle = self;
-    self->loggerBase.log = &loggerLog;
+    self->loggerBase.log = &loggerLog;		//TODO dem nachgehen
 
     return self;
 }
@@ -69,6 +69,7 @@ ILoggerHandle Logger_getILogger(LoggerHandle self)
 {
     return &self->loggerBase;
 }
+
 
 static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg)
 {
@@ -80,8 +81,7 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg)
     // funktion reentrant machen mit
     char logBufferLocal[50];
 //    strcpy(logBufferLocal, self->logBuffer);
-
-    if (self->logBuffer != NULL)
+    if (&self->logBuffer != NULL)
     {
         strcpy(logBufferLocal, severity_string);
         strcat(logBufferLocal, separating_seq);
@@ -109,10 +109,6 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg)
 //        strcpy(self->logBuffer, logBufferLocal);	//TODO this is not reentrant, is it? If not, how can i make it
     }
 
-    strcpy(self->logBuffer, "BBBBBBBBB");
-
-    // mutex freigeben
-
 	//    TODO hier sc_log setzen ähnlich wie in CommandAnnounce, damit bekannt gegeben wird, dass eine log-nachricht bereit ist.
 	//    Oder einfach Scope_log() aufrufen? Macht genau das.
 	//    self
@@ -120,8 +116,6 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg)
 	//    MessageType packType = SC_LOG;
 	//    self->
 	//    self->packObserver->update(self->packObserver, &packType);
-
-
 }
 
 #ifdef UNIT_TEST

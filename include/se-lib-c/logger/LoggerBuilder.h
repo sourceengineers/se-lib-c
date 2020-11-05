@@ -21,8 +21,6 @@
 /******************************************************************************
  Define class handle data
 ******************************************************************************/
-typedef struct __LoggerBuilderPrivateData* LoggerBuilderHandle;
-
 
 /******************************************************************************
  Define Interface
@@ -32,33 +30,15 @@ typedef struct __LoggerBuilderPrivateData* LoggerBuilderHandle;
  Public functions 
 ******************************************************************************/
 
-LoggerBuilderHandle LoggerBuilder_create(void);
+void LoggerBuilder_create(void);
 
-void LoggerBuilder_setBufferSize(LoggerBuilderHandle me, size_t bufferSize);
+void LoggerBuilder_buildThreadSafe(size_t bufferSize, IMutexHandle mutex);
 
-void LoggerBuilder_setLoggerBuffer(LoggerBuilderHandle me, BufferedByteStreamHandle loggerBuffer);
+void LoggerBuilder_build(size_t bufferSize);
 
-void LoggerBuilder_setMutex(LoggerBuilderHandle me, IMutexHandle mutex);
+IByteStreamHandle LoggerBuilder_getILoggerBufferHandle(void);
 
-void LoggerBuilder_setThreadSafeByteStream(LoggerBuilderHandle me, ThreadSafeByteStreamHandle tsLoggerBuffer);
+ILoggerHandle LoggerBuilder_getILoggerHandle(void);
 
-void LoggerBuilder_buildThreadSafe(LoggerBuilderHandle me);
-
-void LoggerBuilder_build(LoggerBuilderHandle me);
-
-char* LoggerBuilder_getBuffer(LoggerBuilderHandle me);
-
-char* LoggerBuilder_getBufferedByteStream(LoggerBuilderHandle me);
-
-IByteStreamHandle LoggerBuilder_getILoggerBufferHandle(LoggerBuilderHandle me);
-
-ILoggerHandle LoggerBuilder_getILoggerHandle(LoggerBuilderHandle me);
-
-
-/**
- * Deconstructor
- * @param me
- */
-void LoggerBuilder_destroy(LoggerBuilderHandle me);
 
 #endif //SE_SCOPE_LOGGERBUILDER_H
