@@ -36,7 +36,7 @@ static bool byteIsReady(IByteStreamHandle self)
 {
 	bool success = false;
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
-	if(me->mutex->lock(me->mutex, 0xFF))
+	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
 		success = me->composite->byteIsReady(me->composite);
 		me->mutex->unlock(me->mutex);
@@ -49,7 +49,7 @@ static uint8_t readByte(IByteStreamHandle self)
 {
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
 	uint8_t readValue;
-	if(me->mutex->lock(me->mutex, 0xFF))
+	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
 		readValue = me->composite->readByte(me->composite);
 		me->mutex->unlock(me->mutex);
@@ -61,7 +61,7 @@ static size_t length(IByteStreamHandle self)
 {
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
 	size_t length;
-	if(me->mutex->lock(me->mutex, 0xFF))
+	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
 		me->composite->length(me->composite);
 		me->mutex->unlock(me->mutex);
@@ -73,7 +73,7 @@ static bool writeByte(IByteStreamHandle self, const uint8_t data)
 {
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
 	bool success = false;
-	if(me->mutex->lock(me->mutex, 0xFF))
+	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
 		success = me->composite->writeByte(me->composite, data);
 		me->mutex->unlock(me->mutex);
@@ -84,7 +84,7 @@ static bool writeByte(IByteStreamHandle self, const uint8_t data)
 static void flush(IByteStreamHandle self)
 {
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
-	if(me->mutex->lock(me->mutex, 0xFF))
+	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
 		me->composite->flush(me->composite);
 		me->mutex->unlock(me->mutex);
@@ -95,7 +95,7 @@ static size_t capacity (IByteStreamHandle self)
 {
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
 	size_t capacity;
-	if(me->mutex->lock(me->mutex, 0xFF))
+	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
 		capacity = me->composite->capacity(me->composite);
 		me->mutex->unlock(me->mutex);
@@ -107,7 +107,7 @@ static bool write(IByteStreamHandle self, const uint8_t* data, const size_t leng
 {
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
 	bool success = false;
-    if(me->mutex->lock(me->mutex, 0xFF))
+    if(me->mutex->lock(me->mutex, 0xFFF))
     {
     	success = me->composite->write(me->composite, data, length);
         me->mutex->unlock(me->mutex);
@@ -118,7 +118,7 @@ static bool write(IByteStreamHandle self, const uint8_t* data, const size_t leng
 static void read(IByteStreamHandle self, uint8_t* data, const size_t length)
 {
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
-    if(me->mutex->lock(me->mutex, 0xFF))
+    if(me->mutex->lock(me->mutex, 0xFFF))
     {
 		me->composite->read(me->composite, data, length);
         me->mutex->unlock(me->mutex);

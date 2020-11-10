@@ -32,7 +32,7 @@ typedef struct __LoggerPrivateData
     IByteStreamHandle byteStream;
 } LoggerPrivateData;
 
-static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg);
+static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg);
 //static bool loggerStreamLogMessage(IByteStreamHandle stream, LoggerHandle self);		//TODO is this needed?
 static char* loggerPrepareSeverity(SEVERITY severity);
 /******************************************************************************
@@ -48,19 +48,19 @@ static char* loggerPrepareSeverity(SEVERITY severity)
  Public functions
 ******************************************************************************/
 
-LoggerHandle Logger_create(size_t logMessageSize, IByteStreamHandle byteStream)
+LoggerHandle Logger_create(size_t logMessageSize, size_t logBufferSize, IByteStreamHandle byteStream)
 {
     LoggerHandle self = malloc(sizeof(LoggerPrivateData));
     assert(self);
-    self->logBuffer = malloc(logMessageSize);
+    self->logBuffer = malloc(logBufferSize);
     assert(self->logBuffer);
-    self->logMessageSize = logMessageSize;
+    self->logMessageSize = logMessageSize;	//TODO this is wrong, 200 but should be 50
     self->byteStream = byteStream;
     assert(self->byteStream);
 
     // setup the base-class (ILog interface)
     self->loggerBase.handle = self;
-    self->loggerBase.log = &loggerLog;		//TODO dem nachgehen
+    self->loggerBase.log = &loggerLog;
 
     return self;
 }
@@ -71,16 +71,16 @@ ILoggerHandle Logger_getILogger(LoggerHandle self)
 }
 
 
-static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg)
+static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
 {
-    char separating_seq[] = ": ";       // sequence between severity and log message
-    char *severity_string = loggerPrepareSeverity(severity);
+	LoggerHandle self = (LoggerHandle) parent->handle;
+
+	char separating_seq[] = ": ";       // sequence between severity and log message
+	char *severity_string = loggerPrepareSeverity(severity);
 
     // hier mutex-lock
 
-    // funktion reentrant machen mit
-    char logBufferLocal[50];
-//    strcpy(logBufferLocal, self->logBuffer);
+	uint8_t logBufferLocal[self->logMessageSize];	//TODO magic number
     if (&self->logBuffer != NULL)
     {
         strcpy(logBufferLocal, severity_string);
@@ -106,7 +106,6 @@ static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg)
                 strncpy(logBufferLocal + (lengthOfCurrentMessage-strlen("SCOPE BUF OVFL;")), "SCOPE BUF OVFL;", strlen("SCOPE BUF OVFL;"));
             }
         }
-//        strcpy(self->logBuffer, logBufferLocal);	//TODO this is not reentrant, is it? If not, how can i make it
     }
 
 	//    TODO hier sc_log setzen ähnlich wie in CommandAnnounce, damit bekannt gegeben wird, dass eine log-nachricht bereit ist.

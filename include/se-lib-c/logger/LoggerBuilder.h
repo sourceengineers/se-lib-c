@@ -32,9 +32,9 @@
 
 void LoggerBuilder_create(void);
 
-void LoggerBuilder_buildThreadSafe(size_t bufferSize, IMutexHandle mutex);
+void LoggerBuilder_buildThreadSafe(size_t logMessageSize, size_t logBufferSize, IMutexHandle mutex);
 
-void LoggerBuilder_build(size_t bufferSize);
+void LoggerBuilder_build(size_t logMessageSize, size_t logBufferSize);
 
 IByteStreamHandle LoggerBuilder_getILoggerBufferHandle(void);
 

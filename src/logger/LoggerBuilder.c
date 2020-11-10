@@ -4,6 +4,7 @@
  * @copyright    Copyright (c) 2019 by Sourceengineers. All Rights Reserved.
  *
  * @authors      Benjamin Rupp  benjamin.rupp@sourceengineers.com
+ * 				 Anselm Fuhrer	anselm.fuhrer@sourceengineers.com
  *
  *****************************************************************************************************************************************/
 
@@ -41,22 +42,22 @@ void LoggerBuilder_create(void)
     me.loggerBuffer = NULL;
 }
 
-void LoggerBuilder_build(size_t bufferSize){
+void LoggerBuilder_build(size_t logMessageSize, size_t logBufferSize){
 	// build logger-buffer without mutex
-	me.loggerBuffer = BufferedByteStream_create(bufferSize);
+	me.loggerBuffer = BufferedByteStream_create(logBufferSize);
 	assert(me.loggerBuffer);
 	// build logger on top of logger-buffer
 	IByteStream* byteStream = BufferedByteStream_getIByteStream(me.loggerBuffer);
 	assert(byteStream);
-    me.logger = Logger_create(bufferSize, byteStream);
+    me.logger = Logger_create(logMessageSize, logBufferSize, byteStream);
 	assert(me.logger);
 }
 
-void LoggerBuilder_buildThreadSafe(size_t bufferSize, IMutexHandle mutex)
+void LoggerBuilder_buildThreadSafe(size_t logMessageSize, size_t logBufferSize,  IMutexHandle mutex)
 {
 	assert(mutex);
 
-	me.loggerBuffer = BufferedByteStream_create(bufferSize);
+	me.loggerBuffer = BufferedByteStream_create(logBufferSize);
 	assert(me.loggerBuffer);
 
 	IByteStream* byteStream = BufferedByteStream_getIByteStream(me.loggerBuffer);
@@ -68,7 +69,7 @@ void LoggerBuilder_buildThreadSafe(size_t bufferSize, IMutexHandle mutex)
     byteStream = ThreadSafeByteStream_getIByteStream(me.tsLoggerBuffer);
     assert(byteStream);
 
-	me.logger = Logger_create(bufferSize, byteStream);
+	me.logger = Logger_create(logBufferSize, logMessageSize, byteStream);
 	assert(me.logger);
 }
 
@@ -93,6 +94,6 @@ IByteStreamHandle LoggerBuilder_getILoggerBufferHandle()
 ILoggerHandle LoggerBuilder_getILoggerHandle()
 {
 	assert(me.logger);
-	return Logger_getILogger(me.logger);	//this is NULL
+	return Logger_getILogger(me.logger);
 }
 

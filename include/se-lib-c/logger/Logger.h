@@ -33,8 +33,7 @@ typedef struct __LoggerPrivateData* LoggerHandle;
  * @param 
  * @return
  */
-LoggerHandle Logger_create(size_t logMessageSize, IByteStreamHandle byteStream);
-
+LoggerHandle Logger_create(size_t logMessageSize, size_t logBufferSize, IByteStreamHandle byteStream);
 /**
  * Returns the ILogger interface
  * @param LoggerHandle
