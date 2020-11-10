@@ -5,6 +5,12 @@
  *
  * @authors      Anselm Fuhrer anselm.fuhrer@sourceengineers.com
  *
+ * @brief		 Adds Thread-Safety to an existing ByteStream with the
+ * 				 Composite-Pattern. Requires a ByteStream and a mutex.
+ * 				 After creating with ThreadSafeByteStream_create, all functions
+ * 				 lock the mutex, call the function of the composite, then unlock
+ * 				 the mutex.
+ *
  *****************************************************************************************************************************************/
 
 #include <se-lib-c/stream/IByteStream.h>

@@ -10,6 +10,7 @@
 #include "se-lib-c/logger/Logger.h"
 #include "se-lib-c/stream/IByteStream.h"
 #include "se-lib-c/stream/ThreadSafeByteStream.h"
+#include "Scope/Core/Scope.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -105,7 +106,7 @@ static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
 
         if(self->byteStream &&
            !self->byteStream->write(self->byteStream, logBufferLocaluint, lengthOfCurrentMessage))
-        {  /* Buffer overflow. Write SCOPE BUF OVFL; to byteStream */
+        {  /* Buffer overflow. Write "SCOPE BUF OVFL;" to byteStream */
 
         	strcpy(logBufferLocal, "SCOPE BUF OVFL;");
         	memcpy(&logBufferLocaluint, &logBufferLocal, sizeof(char)*strlen("SCOPE BUF OVFL;"));
