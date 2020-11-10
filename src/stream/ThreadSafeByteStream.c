@@ -63,7 +63,7 @@ static size_t length(IByteStreamHandle self)
 	size_t length = 0;
 	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
-		me->composite->length(me->composite);
+		length = me->composite->length(me->composite);
 		me->mutex->unlock(me->mutex);
 	}
 	return length;

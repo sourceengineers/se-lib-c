@@ -31,11 +31,14 @@ static bool dataIsReady(IByteStreamHandle parent)
 {
     BufferedByteStreamHandle self = (BufferedByteStreamHandle) parent->handle;
 
+    bool isDataReady = false;
+
     if(ByteRingBuffer_getNumberOfUsedData(self->buffer) > 0){
-        return true;
-    }else{
-        return false;
+    	isDataReady = true;
+    } else {
+    	isDataReady =  false;
     }
+    return isDataReady;
 }
 
 static uint8_t readData(IByteStreamHandle parent)

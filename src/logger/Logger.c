@@ -81,33 +81,35 @@ static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
 	char logBufferLocal[self->logMessageSize];
     if (&self->logBuffer != NULL)
     {
-        strcpy(logBufferLocal, severity_string);
-        strcat(logBufferLocal, separating_seq);
+    	strcpy(logBufferLocal, "");
         uint32_t lengthOfCurrentMessage = strlen(msg)+strlen(separating_seq)+strlen(severity_string);
+        /* the message fits in a log message, so append it to the logBuffer */
         if (lengthOfCurrentMessage < self->logMessageSize)
         {
+        	strcpy(logBufferLocal, severity_string);
+        	strcat(logBufferLocal, separating_seq);
             strcat(logBufferLocal, msg);
         }
         else    /* string is too long, must be shortened */
         {
+        	/* only append as much as fits */
             lengthOfCurrentMessage = self->logMessageSize;
+            strcpy(logBufferLocal, severity_string);
+        	strcat(logBufferLocal, separating_seq);
             strncat(logBufferLocal, msg, self->logMessageSize - strlen(severity_string) - strlen(separating_seq));
         }
 
+        /* char -> uint8_t so there are no warnings in the byteStream */
 		uint8_t logBufferLocaluint[self->logMessageSize];
 		memcpy(&logBufferLocaluint, &logBufferLocal, sizeof(char)*self->logMessageSize);
 
         if(self->byteStream &&
            !self->byteStream->write(self->byteStream, logBufferLocaluint, lengthOfCurrentMessage))
-        {  /* Buffer Overflow */
-            if(lengthOfCurrentMessage<strlen("SCOPE BUF OVFL;")){
-                strcpy(logBufferLocal, "SCOPE BUF OVFL;");
-            }
-            else{
-            	//remove some of the contents
-                strncpy(logBufferLocal + (lengthOfCurrentMessage-strlen("SCOPE BUF OVFL;")), "SCOPE BUF OVFL;", strlen("SCOPE BUF OVFL;"));
-                //todo write this to the byteStream, this does nothing at the moment
-            }
+        {  /* Buffer overflow. Write SCOPE BUF OVFL; to byteStream */
+
+        	strcpy(logBufferLocal, "SCOPE BUF OVFL;");
+        	memcpy(&logBufferLocaluint, &logBufferLocal, sizeof(char)*strlen("SCOPE BUF OVFL;"));
+        	self->byteStream->write(self->byteStream, logBufferLocaluint, lengthOfCurrentMessage);
         }
     }
 
