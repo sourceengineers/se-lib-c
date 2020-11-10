@@ -69,7 +69,7 @@ void LoggerBuilder_buildThreadSafe(size_t logMessageSize, size_t logBufferSize, 
     byteStream = ThreadSafeByteStream_getIByteStream(me.tsLoggerBuffer);
     assert(byteStream);
 
-	me.logger = Logger_create(logBufferSize, logMessageSize, byteStream);
+	me.logger = Logger_create(logMessageSize, logBufferSize, byteStream);
 	assert(me.logger);
 }
 

@@ -54,7 +54,7 @@ LoggerHandle Logger_create(size_t logMessageSize, size_t logBufferSize, IByteStr
     assert(self);
     self->logBuffer = malloc(logBufferSize);
     assert(self->logBuffer);
-    self->logMessageSize = logMessageSize;	//TODO this is wrong, 200 but should be 50
+    self->logMessageSize = logMessageSize;
     self->byteStream = byteStream;
     assert(self->byteStream);
 
@@ -78,9 +78,7 @@ static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
 	char separating_seq[] = ": ";       // sequence between severity and log message
 	char *severity_string = loggerPrepareSeverity(severity);
 
-    // hier mutex-lock
-
-	uint8_t logBufferLocal[self->logMessageSize];	//TODO magic number
+	char logBufferLocal[self->logMessageSize];
     if (&self->logBuffer != NULL)
     {
         strcpy(logBufferLocal, severity_string);
@@ -96,14 +94,19 @@ static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
             strncat(logBufferLocal, msg, self->logMessageSize - strlen(severity_string) - strlen(separating_seq));
         }
 
+		uint8_t logBufferLocaluint[self->logMessageSize];
+		memcpy(&logBufferLocaluint, &logBufferLocal, sizeof(char)*self->logMessageSize);
+
         if(self->byteStream &&
-           !self->byteStream->write(self->byteStream, logBufferLocal, lengthOfCurrentMessage))
+           !self->byteStream->write(self->byteStream, logBufferLocaluint, lengthOfCurrentMessage))
         {  /* Buffer Overflow */
             if(lengthOfCurrentMessage<strlen("SCOPE BUF OVFL;")){
                 strcpy(logBufferLocal, "SCOPE BUF OVFL;");
             }
             else{
+            	//remove some of the contents
                 strncpy(logBufferLocal + (lengthOfCurrentMessage-strlen("SCOPE BUF OVFL;")), "SCOPE BUF OVFL;", strlen("SCOPE BUF OVFL;"));
+                //todo write this to the byteStream, this does nothing at the moment
             }
         }
     }

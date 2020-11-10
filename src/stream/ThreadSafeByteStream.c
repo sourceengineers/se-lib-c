@@ -60,7 +60,7 @@ static uint8_t readByte(IByteStreamHandle self)
 static size_t length(IByteStreamHandle self)
 {
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
-	size_t length;
+	size_t length = 0;
 	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
 		me->composite->length(me->composite);
