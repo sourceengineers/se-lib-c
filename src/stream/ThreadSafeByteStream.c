@@ -16,7 +16,6 @@
 #include <se-lib-c/stream/IByteStream.h>
 #include <se-lib-c/stream/ThreadSafeByteStream.h>
 #include <se-lib-c/osal/IMutex.h>
-#include <se-lib-c/util/composite/IComposite.h>
 
 #include <stdlib.h>
 #include <assert.h>

@@ -78,8 +78,8 @@ static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
 
 	char separating_seq[] = ": ";       // sequence between severity and log message
 	char *severity_string = loggerPrepareSeverity(severity);
-
 	char logBufferLocal[self->logMessageSize];
+
     if (&self->logBuffer != NULL)
     {
     	strcpy(logBufferLocal, "");
@@ -102,16 +102,11 @@ static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
 
         //TODO hier aufräumen
         /* char -> uint8_t so there are no warnings in the byteStream */
-		uint8_t logBufferLocaluint[self->logMessageSize];
-		memcpy(&logBufferLocaluint, &logBufferLocal, sizeof(char)*self->logMessageSize);
 
         if(self->byteStream &&
            !self->byteStream->write(self->byteStream, (uint8_t*) logBufferLocal, lengthOfCurrentMessage))
         {  /* Buffer overflow. Write "SCOPE BUF OVFL;" to byteStream */
-
-        	strcpy(logBufferLocal, "SCOPE BUF OVFL;");
-        	memcpy(&logBufferLocaluint, &logBufferLocal, sizeof(char)*strlen("SCOPE BUF OVFL;"));
-        	self->byteStream->write(self->byteStream, logBufferLocaluint, lengthOfCurrentMessage);
+        	self->byteStream->write(self->byteStream, (uint8_t*) "SCOPE BUF OVFL", strlen("SCOPE BUF OVFL"));
         }
     }
 //    Scope_log();
