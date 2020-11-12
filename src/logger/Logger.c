@@ -100,12 +100,13 @@ static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
             strncat(logBufferLocal, msg, self->logMessageSize - strlen(severity_string) - strlen(separating_seq));
         }
 
+        //TODO hier aufräumen
         /* char -> uint8_t so there are no warnings in the byteStream */
 		uint8_t logBufferLocaluint[self->logMessageSize];
 		memcpy(&logBufferLocaluint, &logBufferLocal, sizeof(char)*self->logMessageSize);
 
         if(self->byteStream &&
-           !self->byteStream->write(self->byteStream, logBufferLocaluint, lengthOfCurrentMessage))
+           !self->byteStream->write(self->byteStream, (uint8_t*) logBufferLocal, lengthOfCurrentMessage))
         {  /* Buffer overflow. Write "SCOPE BUF OVFL;" to byteStream */
 
         	strcpy(logBufferLocal, "SCOPE BUF OVFL;");
@@ -113,7 +114,7 @@ static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
         	self->byteStream->write(self->byteStream, logBufferLocaluint, lengthOfCurrentMessage);
         }
     }
-
+//    Scope_log();
 	//    TODO hier sc_log setzen ähnlich wie in CommandAnnounce, damit bekannt gegeben wird, dass eine log-nachricht bereit ist.
 	//    Oder einfach Scope_log() aufrufen? Macht genau das.
 	//    self
