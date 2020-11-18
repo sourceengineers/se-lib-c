@@ -39,15 +39,14 @@ typedef struct __ThreadSafeByteStreamPrivateData
 
 static bool byteIsReady(IByteStreamHandle self)
 {
-	bool success = false;
+	bool isReady = false;
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
 	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
-		success = me->composite->byteIsReady(me->composite);
+		isReady = me->composite->byteIsReady(me->composite);
 		me->mutex->unlock(me->mutex);
 	}
-
-	return success;
+	return isReady;
 }
 
 static uint8_t readByte(IByteStreamHandle self)
