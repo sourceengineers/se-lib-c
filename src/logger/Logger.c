@@ -33,17 +33,12 @@ typedef struct __LoggerPrivateData
     IByteStreamHandle byteStream;
 } LoggerPrivateData;
 
-static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg);
+static void loggerLog(ILoggerHandle parent, const char* msg);
 //static bool loggerStreamLogMessage(IByteStreamHandle stream, LoggerHandle self);		//TODO is this needed?
-static char* loggerPrepareSeverity(SEVERITY severity);
+
 /******************************************************************************
  Private functions
 ******************************************************************************/
-
-static char* loggerPrepareSeverity(SEVERITY severity)
-{
-    return strSeverity[severity];
-}
 
 /******************************************************************************
  Public functions
@@ -74,49 +69,27 @@ ILoggerHandle Logger_getILogger(LoggerHandle self)
 // attach observer
 
 
-static void loggerLog(ILoggerHandle parent, SEVERITY severity, const char* msg)
+static void loggerLog(ILoggerHandle parent, const char* msg)
 {
 	LoggerHandle self = (LoggerHandle) parent->handle;
-
-	char separating_seq[] = ": ";       // sequence between severity and log message
-	char *severity_string = loggerPrepareSeverity(severity);
 	char logBufferLocal[self->logMessageSize];
 
     if (&self->logBuffer != NULL)
     {
-    	strcpy(logBufferLocal, "");
-        uint32_t lengthOfCurrentMessage = strlen(msg)+strlen(separating_seq)+strlen(severity_string);
-        /* the message fits in a log message, so append it to the logBuffer */
-        if (lengthOfCurrentMessage < self->logMessageSize)
-        {
-        	strcpy(logBufferLocal, severity_string);
-        	strcat(logBufferLocal, separating_seq);
-            strcat(logBufferLocal, msg);
-        }
-        else    /* string is too long, must be shortened */
-        {
-        	/* only append as much as fits */
-            lengthOfCurrentMessage = self->logMessageSize;
-            strcpy(logBufferLocal, severity_string);
-        	strcat(logBufferLocal, separating_seq);
-            strncat(logBufferLocal, msg, self->logMessageSize - strlen(severity_string) - strlen(separating_seq));
-        }
-
+    	strcpy(logBufferLocal, msg);
         if(self->byteStream &&
-           !self->byteStream->write(self->byteStream, (uint8_t*) logBufferLocal, lengthOfCurrentMessage))
+           !self->byteStream->write(self->byteStream, (uint8_t*) logBufferLocal, strlen(logBufferLocal)))
         {  /* Buffer overflow. Write "SCOPE BUF OVFL;" to byteStream */
         	//TODO ask how many bytes are available in the stream, print this many instead, add overflow message
-        	self->byteStream->write(self->byteStream, (uint8_t*) "SCOPE BUF OVFL", strlen("SCOPE BUF OVFL"));
+        	if(self->byteStream->capacity(self->byteStream) > strlen("SCOPE_BUF_OVFL\n")){
+            	self->byteStream->write(self->byteStream, (uint8_t*) "SCOPE BUF OVFL\n", strlen("SCOPE BUF OVFL\n"));
+        	}
+        	else{
+            	self->byteStream->flush(self->byteStream);
+            	self->byteStream->write(self->byteStream, (uint8_t*) "SCOPE BUF OVFL\n", strlen("SCOPE BUF OVFL\n"));
+        	}
         }
     }
-    //    Scope_log();
-	//    TODO hier sc_log setzen ähnlich wie in CommandAnnounce, damit bekannt gegeben wird, dass eine log-nachricht bereit ist.
-	//    Oder einfach Scope_log() aufrufen? Macht genau das.
-	//    self
-	//    CommandAnnounceHandle self = (CommandAnnounceHandle) command->handle;
-	//    MessageType packType = SC_LOG;
-	//    self->
-	//    self->packObserver->update(self->packObserver, &packType);
 }
 
 #ifdef UNIT_TEST

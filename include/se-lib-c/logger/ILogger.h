@@ -32,7 +32,7 @@ typedef struct ILoggerStruct{
      * @param logger
      * @return
      */
- void (* log)(ILoggerHandle logger, SEVERITY severity, const char* msg);
+ void (* log)(ILoggerHandle logger, const char* msg);
 
 } ILogger;
 #endif
