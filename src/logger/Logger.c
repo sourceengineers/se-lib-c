@@ -10,10 +10,9 @@
 #include "se-lib-c/logger/Logger.h"
 #include "se-lib-c/stream/IByteStream.h"
 #include "se-lib-c/stream/ThreadSafeByteStream.h"
-#include "Scope/Core/Scope.h"
+
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
 
 
@@ -68,25 +67,24 @@ ILoggerHandle Logger_getILogger(LoggerHandle self)
 
 // attach observer
 
-
 static void loggerLog(ILoggerHandle parent, const char* msg)
 {
-	LoggerHandle self = (LoggerHandle) parent->handle;
+    LoggerHandle self = (LoggerHandle) parent->handle;
+    assert(strlen(msg)<=self->logMessageSize);
 	char logBufferLocal[self->logMessageSize];
 
     if (&self->logBuffer != NULL)
     {
     	strcpy(logBufferLocal, msg);
         if(self->byteStream &&
-           !self->byteStream->write(self->byteStream, (uint8_t*) logBufferLocal, strlen(logBufferLocal)))
+           !self->byteStream->write(self->byteStream, (const uint8_t*) logBufferLocal, strlen(logBufferLocal)))
         {  /* Buffer overflow. Write "SCOPE BUF OVFL;" to byteStream */
-        	//TODO ask how many bytes are available in the stream, print this many instead, add overflow message
-        	if(self->byteStream->capacity(self->byteStream) > strlen("SCOPE_BUF_OVFL\n")){
-            	self->byteStream->write(self->byteStream, (uint8_t*) "SCOPE BUF OVFL\n", strlen("SCOPE BUF OVFL\n"));
+        	if(self->byteStream->numOfFreeBytes(self->byteStream) > strlen("SCOPE_BUF_OVFL\n")){
+            	self->byteStream->write(self->byteStream, (const uint8_t*) "SCOPE BUF OVFL\n", strlen("SCOPE BUF OVFL\n"));
         	}
-        	else{
+        	else{   /* Not enough free space to write it. Flush, then write */
             	self->byteStream->flush(self->byteStream);
-            	self->byteStream->write(self->byteStream, (uint8_t*) "SCOPE BUF OVFL\n", strlen("SCOPE BUF OVFL\n"));
+            	self->byteStream->write(self->byteStream, (const uint8_t*) "SCOPE BUF OVFL\n", strlen("SCOPE BUF OVFL\n"));
         	}
         }
     }

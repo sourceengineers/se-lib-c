@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 extern "C" {
 #include <se-lib-c/logger/Logger.h>
 #include <se-lib-c/logger/ILogger.h>
+#include <se-lib-c/logger/LoggerBuilder.h>
 #include <stream/MockByteStream.h>
 }
 
@@ -17,24 +19,23 @@ protected:
 
     }
 
-    LoggerHandle loggerHandle;
-    ILoggerHandle iLoggerHandle;
-    severity log_severity;
-    size_t buf_size;
-    MockByteStream _byteStream;
+    size_t logBufferSize = 300;		// size of the buffer. equals max number of buffered messages
+    size_t logMessageSize = 300;
+    ILoggerHandle logHandle;
+    IByteStreamHandle logByteStream;
+
 
     void SetUp() override
     {
-        MockByteStream_init(&_byteStream);
-        log_severity = SC_WARNING;
-        buf_size = 100;
-        loggerHandle = Logger_create(buf_size, MockByteStream_getBytestreamInterface(&_byteStream));       /* create LoggerHandle */
-        iLoggerHandle = Logger_getILogger(loggerHandle);        /* get the interface  */
+        LoggerBuilder_create();
+        LoggerBuilder_build(logMessageSize, logBufferSize);
+        logHandle = LoggerBuilder_getILoggerHandle();
+        logByteStream = LoggerBuilder_getILoggerBufferHandle();
     }
 
     void TearDown() override
     {
-        LoggerDestroy(loggerHandle);
+
     }
 
     virtual ~LoggerTest()
@@ -43,97 +44,133 @@ protected:
     }
 };
 
+/*
+ * create the logger
+ */
 TEST_F(LoggerTest, LoggerCreated)
 {
     /* check if the logger exists */
-    EXPECT_NE(nullptr, &loggerHandle);
-    EXPECT_NE(nullptr, &iLoggerHandle);
-    EXPECT_NE(nullptr, &_byteStream);
+    EXPECT_NE(nullptr, &logHandle);
+    EXPECT_NE(nullptr, &logByteStream);
 }
 
+/*
+ * log one message
+ */
 TEST_F(LoggerTest, LogFunctionality)
 {
-    const char logMsg[] = "Hello World!";
-    iLoggerHandle->log(iLoggerHandle, log_severity, logMsg);
-    EXPECT_STREQ("WARNING: Hello World!", Logger_getBuffer(loggerHandle));
-    EXPECT_STREQ("WARNING: Hello World!", _byteStream.stringBuffer);
+    const char logMsg[] = "Hello";     //strlen = 5
+    logHandle->log(logHandle, logMsg);
+    char logBufferContents[300];
+    size_t log_size = (logByteStream->length(logByteStream));
+    EXPECT_EQ(log_size, strlen(logMsg));
+    logByteStream->read(logByteStream, (uint8_t *) logBufferContents, log_size);
+    for(int i = 0; i<log_size; i++){
+        EXPECT_EQ(logMsg[i], logBufferContents[i]);
+    }
+    log_size = (logByteStream->length(logByteStream));
+    EXPECT_EQ(log_size, 0);
 }
 
-TEST_F(LoggerTest, LongMessage)
+
+/*
+ * Log the same message twice
+ */
+TEST_F(LoggerTest, TwoLogMsg)
 {
-    //200 char long log message, should be shortened
+    const char logMsg[] = "TestString\n\r";
+    logHandle->log(logHandle, logMsg);
+    logHandle->log(logHandle, logMsg);
+    char logBufferContents[300];
+
+    size_t log_size = (logByteStream->length(logByteStream));
+    EXPECT_EQ(log_size, 2*(strlen(logMsg)));
+
+    char expectedValue[300];
+    sprintf(expectedValue, "%s%s", logMsg, logMsg);
+    logByteStream->read(logByteStream, (uint8_t *) logBufferContents, log_size);
+    for(int i = 0; i<log_size; i++){
+        EXPECT_EQ(expectedValue[i], logBufferContents[i]);
+    }
+}
+
+/*
+ *  Try to write two 200 Byte Log messages in a 300 Byte buffer. Should lead to the firs message being logged
+ *  as expected and the second message being replaced by "SCOPE BUF OVFL\n"
+ */
+TEST_F(LoggerTest, OvflMsg)
+{
+    size_t log_size;
+    char logBufferContents[300];
+    //200 char long log message, should lead to Buffer Overflow
     const char longLogMsg[] = "Lorem ipsum dolor sit amet, consetetur sadipscing "
                               "elitr, sed diam nonumy eirmod tempor invidunt ut "
                               "labore et dolore magna aliquyam erat, sed diam "
                               "voluptua. At vero eos et accusam et justo duo dolores ";
-    iLoggerHandle->log(iLoggerHandle, log_severity, longLogMsg);
+    const char bufOvflMsg[] = "SCOPE BUF OVFL\n";
+    char expectedBufferValues[300];
+    sprintf(expectedBufferValues, "%s%s", longLogMsg, bufOvflMsg);
 
-    /* Log level will be added, String will be shortened */
-    EXPECT_STREQ("WARNING: Lorem ipsum dolor sit amet, consetetur "
-                 "sadipscing elitr, sed diam nonumy eirmod tempor invi",
-                 Logger_getBuffer(loggerHandle));
+    // write 200 Bytes, expected to work regularly
+    logHandle->log(logHandle, longLogMsg);
+    log_size = (logByteStream->length(logByteStream));
+    EXPECT_EQ(log_size, strlen(longLogMsg));
+
+    // try to write 200 Bytes again. This would lead to a Buffer overflow, thus the ovfl msg should be appended instead
+    // of the message
+    logHandle->log(logHandle, longLogMsg);
+    log_size = (logByteStream->length(logByteStream));
+    EXPECT_EQ(log_size, strlen(expectedBufferValues));
+
+
+    logByteStream->read(logByteStream, (uint8_t *) logBufferContents, log_size);
+    for(int i = 0; i<log_size; i++){
+        EXPECT_EQ(expectedBufferValues[i], logBufferContents[i]);
+    }
+    // Buffer should be empty now
+    log_size = (logByteStream->length(logByteStream));
+    EXPECT_EQ(log_size, 0);
 }
 
 
-TEST_F(LoggerTest, BufferOverflow)
+
+/*
+ *  Try to log two 290-Byte Log messages in a 300 Byte buffer. The first message should be logged as intednded.
+ *  The second message will not fit in the buffer and the overflow-message will also not fit in the buffer,
+ *  instead the buffer will be flushed and only the overflow-message will be written.
+ */
+TEST_F(LoggerTest, OvflMsgEmptyBuf)
 {
-    const char bufferOverflowMsg[] = "test_buffer_overflow_OVFL";
-    iLoggerHandle->log(iLoggerHandle, log_severity, bufferOverflowMsg);
-    EXPECT_STREQ("WARNING: test_buffeSCOPE BUF OVFL;",Logger_getBuffer(loggerHandle));
-}
+    size_t log_size;
+    char logBufferContents[300];
+    //290 char long log message
+    const char longLogMsg[] = "Lorem ipsum dolor sit amet, consectetur "
+                              "adipiscing elit. Nulla porta non augue vel pharetra. "
+                              "Pellentesque quam orci, gravida at lorem eget, viverra "
+                              "condimentum massa. Integer a sapien a dolor elementum "
+                              "suscipit. In sit amet mi non mauris varius semper non "
+                              "eu justo. Vestibulum semper proin.";
+    const char bufOvflMsg[] = "SCOPE BUF OVFL\n";
+    char expectedBufferValues[300];
+    sprintf(expectedBufferValues, "%s", bufOvflMsg);
 
+    // write 290 Bytes, expected to work regularly
+    logHandle->log(logHandle, longLogMsg);
+    log_size = (logByteStream->length(logByteStream));
+    EXPECT_EQ(log_size, strlen(longLogMsg));
+    EXPECT_EQ(logByteStream->numOfFreeBytes(logByteStream), logBufferSize - strlen(longLogMsg));
 
-TEST_F(LoggerTest, BufferOverflowShort)
-{
-    const char bufferOverflowMsg[] = "ShrtOvfl";
-    iLoggerHandle->log(iLoggerHandle, log_severity, bufferOverflowMsg);
-    EXPECT_STREQ("WASCOPE BUF OVFL;",Logger_getBuffer(loggerHandle));
-}
+    // try to write 290 Bytes again. This would lead to a Buffer overflow. The bufOfvlMsg can also not be appended, as this
+    // would also lead to a buffer overflow. Instead, the buffer is flushed and only the overflow message is written
+    logHandle->log(logHandle, longLogMsg);
+    log_size = (logByteStream->length(logByteStream));
+    EXPECT_EQ(log_size, strlen(expectedBufferValues));
 
-
-TEST_F(LoggerTest, severities)
-{
-    severity sev_info = SC_INFO;
-    severity sev_debug = SC_DEBUG;
-    severity sev_warning = SC_WARNING;
-    severity sev_error = SC_ERROR;
-
-    const char logMsg[] = "Log Message";
-    iLoggerHandle->log(iLoggerHandle, sev_info, logMsg);
-    EXPECT_STREQ("INFO: Log Message",
-                 Logger_getBuffer(loggerHandle));
-    iLoggerHandle->log(iLoggerHandle, sev_debug, logMsg);
-    EXPECT_STREQ("DEBUG: Log Message",
-                 Logger_getBuffer(loggerHandle));
-    iLoggerHandle->log(iLoggerHandle, sev_warning, logMsg);
-    EXPECT_STREQ("WARNING: Log Message",
-                 Logger_getBuffer(loggerHandle));
-    iLoggerHandle->log(iLoggerHandle, sev_error, logMsg);
-    EXPECT_STREQ("ERROR: Log Message",
-                 Logger_getBuffer(loggerHandle));
-}
-
-TEST_F(LoggerTest, multiple_instances)
-{
-    MockByteStream _byteStream1;
-    MockByteStream _byteStream2;
-
-    MockByteStream_init(&_byteStream1);
-    MockByteStream_init(&_byteStream2);
-
-    LoggerHandle loggerHandle1 = Logger_create(buf_size, MockByteStream_getBytestreamInterface(&_byteStream1));
-    LoggerHandle loggerHandle2 = Logger_create(buf_size, MockByteStream_getBytestreamInterface(&_byteStream2));
-
-    ILoggerHandle iLoggerHandle1 = Logger_getILogger(loggerHandle1);
-    ILoggerHandle iLoggerHandle2 = Logger_getILogger(loggerHandle2);
-
-
-    iLoggerHandle1->log(iLoggerHandle1, log_severity, "Test 1");
-    iLoggerHandle2->log(iLoggerHandle2, log_severity, "Test 2");
-
-    EXPECT_STREQ("WARNING: Test 1",
-                 Logger_getBuffer(loggerHandle1));
-
-    EXPECT_STREQ("WARNING: Test 2",
-                 Logger_getBuffer(loggerHandle2));
+    logByteStream->read(logByteStream, (uint8_t *) logBufferContents, log_size);
+    for(int i = 0; i<log_size; i++){
+        EXPECT_EQ(expectedBufferValues[i], logBufferContents[i]);
+    }
+    // Buffer should be empty now
+    log_size = (logByteStream->length(logByteStream));
+    EXPECT_EQ(log_size, 0);
 }

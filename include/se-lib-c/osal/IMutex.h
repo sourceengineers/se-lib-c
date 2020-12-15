@@ -19,6 +19,9 @@
 #define IMUTEX_H
 
 #include <se-lib-c/definition/SeLibCTypes.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
 
 /******************************************************************************
  Define interface handle data

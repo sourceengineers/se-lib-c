@@ -10,7 +10,8 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include <Scope/GeneralPurpose/IMutex.h>
+//#include <Scope/GeneralPurpose/IMutex.h>
+#include <se-lib-c/osal/IMutex.h>
 #include <se-lib-c/logger/LoggerBuilder.h>
 #include <se-lib-c/stream/BufferedByteStream.h>
 #include <se-lib-c/stream/ThreadSafeByteStream.h>

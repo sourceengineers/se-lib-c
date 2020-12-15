@@ -103,6 +103,22 @@ static size_t getCapacity(IByteStreamHandle stream)
     BufferedByteStreamHandle self = (BufferedByteStreamHandle) stream->handle;
     return ByteRingBuffer_getCapacity(self->buffer);
 }
+
+static size_t getNumberOfFreeBytes(IByteStreamHandle stream)
+{
+    BufferedByteStreamHandle self = (BufferedByteStreamHandle) stream->handle;
+    return ByteRingBuffer_getNumberOfFreeData(self->buffer);
+}
+
+
+static size_t getNumberOfUsedBytes(IByteStreamHandle stream)
+{
+    BufferedByteStreamHandle self = (BufferedByteStreamHandle) stream->handle;
+    return ByteRingBuffer_getNumberOfUsedData(self->buffer);
+}
+
+
+
 /******************************************************************************
  Public functions
 ******************************************************************************/
@@ -123,6 +139,8 @@ BufferedByteStreamHandle BufferedByteStream_create(size_t capacity)
     self->parent.write = &write;
     self->parent.flush = &flush;
     self->parent.capacity = &getCapacity;
+    self->parent.numOfFreeBytes = &getNumberOfFreeBytes;
+    self->parent.numOfUsedBytes = &getNumberOfUsedBytes;
 
     return self;
 }

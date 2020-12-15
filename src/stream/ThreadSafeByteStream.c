@@ -36,6 +36,29 @@ typedef struct __ThreadSafeByteStreamPrivateData
  Private functions
 ******************************************************************************/
 
+static size_t numOfFreeBytes(IByteStreamHandle self){
+    ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+    size_t freeBytes = 0;
+    if(me->mutex->lock(me->mutex, 0xFFF))
+    {
+        freeBytes = me->composite->numOfFreeBytes(me->composite);
+        me->mutex->unlock(me->mutex);
+    }
+    return freeBytes;
+}
+
+
+static size_t numOfUsedBytes(IByteStreamHandle self){
+    ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
+    size_t usedBytes = 0;
+    if(me->mutex->lock(me->mutex, 0xFFF))
+    {
+        usedBytes = me->composite->numOfUsedBytes(me->composite);
+        me->mutex->unlock(me->mutex);
+    }
+    return usedBytes;
+}
+
 
 static bool byteIsReady(IByteStreamHandle self)
 {
@@ -152,6 +175,8 @@ ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByte
     me->parent.length = &length;
     me->parent.readByte = &readByte;
     me->parent.byteIsReady = &byteIsReady;
+    me->parent.numOfFreeBytes  = &numOfFreeBytes;
+    me->parent.numOfUsedBytes = &numOfUsedBytes;
 
     return me;
 }
