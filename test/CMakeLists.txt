@@ -17,7 +17,7 @@ add_executable(${SE_LIB_C_TEST}
         ${SE_LIB_C_MOCKS}
         )
 
-target_compile_options(${SE_LIB_C} PUBLIC -DUNIT_TEST)
+target_compile_options(${SE_LIB_C} PUBLIC -DUNIT_TEST --coverage)
 target_include_directories(${SE_LIB_C_TEST} PRIVATE .)
 
 target_link_libraries(
@@ -25,3 +25,4 @@ target_link_libraries(
         PRIVATE
         se-lib::c
         test::gtest)
+target_link_options(${SE_LIB_C} PUBLIC --coverage)

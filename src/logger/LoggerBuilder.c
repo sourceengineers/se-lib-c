@@ -10,11 +10,8 @@
 
 #include <stdlib.h>
 #include <assert.h>
-//#include <Scope/GeneralPurpose/IMutex.h>
 #include <se-lib-c/osal/IMutex.h>
 #include <se-lib-c/logger/LoggerBuilder.h>
-#include <se-lib-c/stream/BufferedByteStream.h>
-#include <se-lib-c/stream/ThreadSafeByteStream.h>
 
 /******************************************************************************
  Define private data
@@ -50,7 +47,7 @@ void LoggerBuilder_build(size_t logMessageSize, size_t logBufferSize){
 	// build logger on top of logger-buffer
 	IByteStream* byteStream = BufferedByteStream_getIByteStream(me.loggerBuffer);
 	assert(byteStream);
-    me.logger = Logger_create(logMessageSize, logBufferSize, byteStream);
+    me.logger = Logger_create(logMessageSize, byteStream);
 	assert(me.logger);
 }
 
@@ -70,7 +67,7 @@ void LoggerBuilder_buildThreadSafe(size_t logMessageSize, size_t logBufferSize, 
     byteStream = ThreadSafeByteStream_getIByteStream(me.tsLoggerBuffer);
     assert(byteStream);
 
-	me.logger = Logger_create(logMessageSize, logBufferSize, byteStream);
+	me.logger = Logger_create(logMessageSize, byteStream);
 	assert(me.logger);
 }
 

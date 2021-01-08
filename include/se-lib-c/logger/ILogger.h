@@ -5,8 +5,7 @@
  *
  * @authors      Benjamin Rupp  benjamin.rupp@sourceengineers.com
  *
- * @brief        
- *
+ * @brief        Interface to log printf-syle data
  *
  ******************************************************************************/
 
@@ -19,7 +18,7 @@
  Define interface handle data
 ******************************************************************************/
 typedef struct ILoggerStruct* ILoggerHandle;
-typedef enum severity {SC_INFO, SC_DEBUG, SC_WARNING, SC_ERROR} SEVERITY;       //TODO change to unique names
+
 
 /******************************************************************************
  Define interface
@@ -30,7 +29,6 @@ typedef struct ILoggerStruct{
     /**
      * Adds log messages to the buffer
      * @param logger
-     * @return
      */
  void (* log)(ILoggerHandle logger, const char* msg);
 

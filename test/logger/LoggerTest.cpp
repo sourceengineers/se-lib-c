@@ -19,18 +19,18 @@ protected:
 
     }
 
-    size_t logBufferSize = 300;		// size of the buffer. equals max number of buffered messages
-    size_t logMessageSize = 300;
-    ILoggerHandle logHandle;
-    IByteStreamHandle logByteStream;
+    size_t _logBufferSize = 300;		// size of the buffer. equals max number of buffered messages
+    size_t _logMessageSize = 300;
+    ILoggerHandle _logHandle;
+    IByteStreamHandle _logByteStream;
 
 
     void SetUp() override
     {
         LoggerBuilder_create();
-        LoggerBuilder_build(logMessageSize, logBufferSize);
-        logHandle = LoggerBuilder_getILoggerHandle();
-        logByteStream = LoggerBuilder_getILoggerBufferHandle();
+        LoggerBuilder_build(_logMessageSize, _logBufferSize);
+        _logHandle = LoggerBuilder_getILoggerHandle();
+        _logByteStream = LoggerBuilder_getILoggerBufferHandle();
     }
 
     void TearDown() override
@@ -50,8 +50,8 @@ protected:
 TEST_F(LoggerTest, LoggerCreated)
 {
     /* check if the logger exists */
-    EXPECT_NE(nullptr, &logHandle);
-    EXPECT_NE(nullptr, &logByteStream);
+    EXPECT_NE(nullptr, &_logHandle);
+    EXPECT_NE(nullptr, &_logByteStream);
 }
 
 /*
@@ -60,15 +60,15 @@ TEST_F(LoggerTest, LoggerCreated)
 TEST_F(LoggerTest, LogFunctionality)
 {
     const char logMsg[] = "Hello";     //strlen = 5
-    logHandle->log(logHandle, logMsg);
+    _logHandle->log(_logHandle, logMsg);
     char logBufferContents[300];
-    size_t log_size = (logByteStream->length(logByteStream));
+    size_t log_size = (_logByteStream->length(_logByteStream));
     EXPECT_EQ(log_size, strlen(logMsg));
-    logByteStream->read(logByteStream, (uint8_t *) logBufferContents, log_size);
+    _logByteStream->read(_logByteStream, (uint8_t *) logBufferContents, log_size);
     for(int i = 0; i<log_size; i++){
         EXPECT_EQ(logMsg[i], logBufferContents[i]);
     }
-    log_size = (logByteStream->length(logByteStream));
+    log_size = (_logByteStream->length(_logByteStream));
     EXPECT_EQ(log_size, 0);
 }
 
@@ -79,16 +79,16 @@ TEST_F(LoggerTest, LogFunctionality)
 TEST_F(LoggerTest, TwoLogMsg)
 {
     const char logMsg[] = "TestString\n\r";
-    logHandle->log(logHandle, logMsg);
-    logHandle->log(logHandle, logMsg);
+    _logHandle->log(_logHandle, logMsg);
+    _logHandle->log(_logHandle, logMsg);
     char logBufferContents[300];
 
-    size_t log_size = (logByteStream->length(logByteStream));
+    size_t log_size = (_logByteStream->length(_logByteStream));
     EXPECT_EQ(log_size, 2*(strlen(logMsg)));
 
     char expectedValue[300];
     sprintf(expectedValue, "%s%s", logMsg, logMsg);
-    logByteStream->read(logByteStream, (uint8_t *) logBufferContents, log_size);
+    _logByteStream->read(_logByteStream, (uint8_t *) logBufferContents, log_size);
     for(int i = 0; i<log_size; i++){
         EXPECT_EQ(expectedValue[i], logBufferContents[i]);
     }
@@ -107,28 +107,28 @@ TEST_F(LoggerTest, OvflMsg)
                               "elitr, sed diam nonumy eirmod tempor invidunt ut "
                               "labore et dolore magna aliquyam erat, sed diam "
                               "voluptua. At vero eos et accusam et justo duo dolores ";
-    const char bufOvflMsg[] = "SCOPE BUF OVFL\n";
+    const char bufOvflMsg[] = "LOG BUF OVFL\n";
     char expectedBufferValues[300];
     sprintf(expectedBufferValues, "%s%s", longLogMsg, bufOvflMsg);
 
     // write 200 Bytes, expected to work regularly
-    logHandle->log(logHandle, longLogMsg);
-    log_size = (logByteStream->length(logByteStream));
+    _logHandle->log(_logHandle, longLogMsg);
+    log_size = (_logByteStream->length(_logByteStream));
     EXPECT_EQ(log_size, strlen(longLogMsg));
 
     // try to write 200 Bytes again. This would lead to a Buffer overflow, thus the ovfl msg should be appended instead
     // of the message
-    logHandle->log(logHandle, longLogMsg);
-    log_size = (logByteStream->length(logByteStream));
+    _logHandle->log(_logHandle, longLogMsg);
+    log_size = (_logByteStream->length(_logByteStream));
     EXPECT_EQ(log_size, strlen(expectedBufferValues));
 
 
-    logByteStream->read(logByteStream, (uint8_t *) logBufferContents, log_size);
+    _logByteStream->read(_logByteStream, (uint8_t *) logBufferContents, log_size);
     for(int i = 0; i<log_size; i++){
         EXPECT_EQ(expectedBufferValues[i], logBufferContents[i]);
     }
     // Buffer should be empty now
-    log_size = (logByteStream->length(logByteStream));
+    log_size = (_logByteStream->length(_logByteStream));
     EXPECT_EQ(log_size, 0);
 }
 
@@ -150,27 +150,27 @@ TEST_F(LoggerTest, OvflMsgEmptyBuf)
                               "condimentum massa. Integer a sapien a dolor elementum "
                               "suscipit. In sit amet mi non mauris varius semper non "
                               "eu justo. Vestibulum semper proin.";
-    const char bufOvflMsg[] = "SCOPE BUF OVFL\n";
+    const char bufOvflMsg[] = "LOG BUF OVFL\n";
     char expectedBufferValues[300];
     sprintf(expectedBufferValues, "%s", bufOvflMsg);
 
     // write 290 Bytes, expected to work regularly
-    logHandle->log(logHandle, longLogMsg);
-    log_size = (logByteStream->length(logByteStream));
+    _logHandle->log(_logHandle, longLogMsg);
+    log_size = (_logByteStream->length(_logByteStream));
     EXPECT_EQ(log_size, strlen(longLogMsg));
-    EXPECT_EQ(logByteStream->numOfFreeBytes(logByteStream), logBufferSize - strlen(longLogMsg));
+    EXPECT_EQ(_logByteStream->numOfFreeBytes(_logByteStream), _logBufferSize - strlen(longLogMsg));
 
     // try to write 290 Bytes again. This would lead to a Buffer overflow. The bufOfvlMsg can also not be appended, as this
     // would also lead to a buffer overflow. Instead, the buffer is flushed and only the overflow message is written
-    logHandle->log(logHandle, longLogMsg);
-    log_size = (logByteStream->length(logByteStream));
+    _logHandle->log(_logHandle, longLogMsg);
+    log_size = (_logByteStream->length(_logByteStream));
     EXPECT_EQ(log_size, strlen(expectedBufferValues));
 
-    logByteStream->read(logByteStream, (uint8_t *) logBufferContents, log_size);
+    _logByteStream->read(_logByteStream, (uint8_t *) logBufferContents, log_size);
     for(int i = 0; i<log_size; i++){
         EXPECT_EQ(expectedBufferValues[i], logBufferContents[i]);
     }
     // Buffer should be empty now
-    log_size = (logByteStream->length(logByteStream));
+    log_size = (_logByteStream->length(_logByteStream));
     EXPECT_EQ(log_size, 0);
 }
