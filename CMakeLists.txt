@@ -30,7 +30,7 @@ include(GNUInstallDirs)
 ################################################################################
 # Generate the library
 ################################################################################
-add_library(${SE_LIB_C} STATIC ${SE_LIB_C_SOURCES})
+add_library(${SE_LIB_C} STATIC ${SE_LIB_C_SOURCES} include/se-lib-c/keyValue/KeyValueTypes.h)
 
 # Add the headers
 target_include_directories(
