@@ -1,8 +1,11 @@
 
+if (NOT DEFINED ${CMAKE_CXX_COMPILER})
+    return()
+endif()
+
 set(SE_LIB_C_TEST ${SE_LIB_C}-test)
 
 project(${SE_LIB_C_TEST})
-
 
 include(cmake/UnitTestFiles.cmake)
 
@@ -25,3 +28,4 @@ target_link_libraries(
         PRIVATE
         se-lib::c
         test::gtest)
+target_link_options(${SE_LIB_C} PUBLIC --coverage)
