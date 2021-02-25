@@ -36,7 +36,8 @@ add_library(${SE_LIB_C} STATIC ${SE_LIB_C_SOURCES})
 target_include_directories(
 		${SE_LIB_C}
 		PUBLIC
-		$<INSTALL_INTERFACE:include>
+		$<INSTALL_INTERFACE:public>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
@@ -45,9 +46,11 @@ target_link_libraries(${SE_LIB_C} INTERFACE se-lib::c)
 ################################################################################
 # Add testing if enabled
 ################################################################################
-enable_testing()
-set(SE_LIB_C_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
-add_subdirectory(test EXCLUDE_FROM_ALL)
+if (NOT ${CMAKE_CROSSCOMPILING})
+	enable_testing()
+	set(SE_LIB_C_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
+	add_subdirectory(test EXCLUDE_FROM_ALL)
+endif()
 
 ################################################################################
 # Export the target
