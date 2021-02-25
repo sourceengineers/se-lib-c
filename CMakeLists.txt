@@ -36,7 +36,8 @@ add_library(${SE_LIB_C} STATIC ${SE_LIB_C_SOURCES})
 target_include_directories(
 		${SE_LIB_C}
 		PUBLIC
-		$<INSTALL_INTERFACE:include>
+		$<INSTALL_INTERFACE:public>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/public>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 

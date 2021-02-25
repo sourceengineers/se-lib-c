@@ -13,7 +13,7 @@
 #define INTRINGBUFFER_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
-#include <se-lib-c/stream/IIntStream.h>
+#include "../../../public/se-lib-c/stream/IIntStream.h"
 #include <stddef.h>
 #include <stdint.h>
 

@@ -15,7 +15,7 @@
 #define BYTESTREAM_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
-#include <se-lib-c/stream/IByteStream.h>
+#include "../../../public/se-lib-c/stream/IByteStream.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>

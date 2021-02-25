@@ -13,7 +13,7 @@
  *
  *****************************************************************************************************************************************/
 
-#include <se-lib-c/stream/IByteStream.h>
+#include "../../public/se-lib-c/stream/IByteStream.h"
 #include <se-lib-c/stream/ThreadSafeByteStream.h>
 #include <se-lib-c/osal/IMutex.h>
 
