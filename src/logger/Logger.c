@@ -4,21 +4,18 @@
  * @copyright    Copyright (c) 2019 by Sourceengineers. All Rights Reserved.
  *
  * @authors      Benjamin Rupp  benjamin.rupp@sourceengineers.com
+ * 			     Anselm Fuhrer  anselm.fuhrer@sourceengineers.com
  *
  *****************************************************************************************************************************************/
-#include <se-lib-c/logger/Logger.h>
-#include <se-lib-c/stream/IByteStream.h>
+#include "se-lib-c/logger/Logger.h"
+#include "se-lib-c/stream/ThreadSafeByteStream.h"
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
-
 
 /******************************************************************************
  Define private data
 ******************************************************************************/
-char* strSeverity[4] = {"INFO", "DEBUG", "WARNING", "ERROR"};
-
 typedef struct __LoggerPrivateData
 {
     /* Inherit  */
@@ -30,17 +27,11 @@ typedef struct __LoggerPrivateData
     IByteStreamHandle byteStream;
 } LoggerPrivateData;
 
-static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg);
-static bool loggerStreamLogMessage(IByteStreamHandle stream,LoggerHandle self);
-static char* loggerPrepareSeverity(SEVERITY severity);
+static void loggerLog(ILoggerHandle parent, const char* msg);
+
 /******************************************************************************
  Private functions
 ******************************************************************************/
-
-static char* loggerPrepareSeverity(SEVERITY severity)
-{
-    return strSeverity[severity];
-}
 
 /******************************************************************************
  Public functions
@@ -50,9 +41,9 @@ LoggerHandle Logger_create(size_t logMessageSize, IByteStreamHandle byteStream)
 {
     LoggerHandle self = malloc(sizeof(LoggerPrivateData));
     assert(self);
-    self->logBuffer = malloc(logMessageSize);
-    assert(self->logBuffer);
     self->logMessageSize = logMessageSize;
+    self->logBuffer = malloc(self->logMessageSize);
+    assert(self->logBuffer);
     self->byteStream = byteStream;
     assert(self->byteStream);
 
@@ -68,42 +59,24 @@ ILoggerHandle Logger_getILogger(LoggerHandle self)
     return &self->loggerBase;
 }
 
-static void loggerLog(LoggerHandle self, SEVERITY severity, const char* msg )
+static void loggerLog(ILoggerHandle parent, const char* msg)
 {
-    char separating_seq[] = ": ";       // sequence between severity and log message
-    char *severity_string = loggerPrepareSeverity(severity);
+    LoggerHandle self = (LoggerHandle) parent->handle;
+    assert(strlen(msg)<=self->logMessageSize);
 
-    if (self->logBuffer != NULL) {
-        strcpy(self->logBuffer, severity_string);
-        strcat(self->logBuffer, separating_seq);
-        uint32_t lengthOfCurrentMessage = strlen(msg)+strlen(separating_seq)+strlen(severity_string);
-        if (lengthOfCurrentMessage < self->logMessageSize)
-        {
-            strcat(self->logBuffer, msg);
-        }
-        else    /* string is too long, must be shortened */
-        {
-            lengthOfCurrentMessage = self->logMessageSize;
-            strncat(self->logBuffer, msg, self->logMessageSize - strlen(severity_string) - strlen(separating_seq));
-        }
-
+    if (&self->logBuffer != NULL)
+    {
+    	strcpy(self->logBuffer, msg);
         if(self->byteStream &&
-           !self->byteStream->write(self->byteStream, self->logBuffer, lengthOfCurrentMessage))
-        {  /* Buffer Overflow */
-            //TODO instead of replacing the contens, add buf ovfl at the end
-            strcpy(self->logBuffer, "SCOPE BUF OVFL;");
+           !self->byteStream->write(self->byteStream, (const uint8_t*) self->logBuffer, strlen(self->logBuffer)))
+        {  /* Buffer overflow. Write "SCOPE BUF OVFL;" to byteStream */
+        	if(self->byteStream->numOfFreeBytes(self->byteStream) > strlen("LOG BUF OVFL\n")){
+            	self->byteStream->write(self->byteStream, (const uint8_t*) "LOG BUF OVFL\n", strlen("LOG BUF OVFL\n"));
+        	}
+        	else{   /* Not enough free space to write it. Flush, then write */
+            	self->byteStream->flush(self->byteStream);
+            	self->byteStream->write(self->byteStream, (const uint8_t*) "LOG BUF OVFL\n", strlen("LOG BUF OVFL\n"));
+        	}
         }
     }
 }
-
-#ifdef UNIT_TEST
-char* Logger_getBuffer(LoggerHandle self)
-{
-    return self->logBuffer;
-}
-
-void LoggerDestroy(LoggerHandle self)
-{
-    free(self);
-}
-#endif

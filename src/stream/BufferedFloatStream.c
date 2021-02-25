@@ -9,7 +9,7 @@
 
 #include <se-lib-c/stream/BufferedFloatStream.h>
 #include <se-lib-c/container/FloatRingBuffer.h>
-#include <se-lib-c/stream/IFloatStream.h>
+#include "../../public/se-lib-c/stream/IFloatStream.h"
 #include <stdlib.h>
 #include <assert.h>
 

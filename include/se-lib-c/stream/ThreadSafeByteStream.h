@@ -1,21 +1,20 @@
 /*!*****************************************************************************
- * @file         BufferedByteStream.h
+ * @file         ThreadSafeByteStream.h
  *
- * @copyright    Copyright (c) 2018 by Sourceengineers. All Rights Reserved.
+ * @copyright    Copyright (c) 2020 by Sourceengineers. All Rights Reserved.
  *
- * @authors      Samuel Schuepbach samuel.schuepbach@sourceengineers.com
+ * @authors      Anselm Fuhrer anselm.fuhrer@sourceengineers.com
  *
- * @brief        Implementation of the byte stream interface.
- *               The buffered byte stream uses a ring buffer as underlying data
- *               structure
+ * @brief        TODO
  *
  ******************************************************************************/
 
-#ifndef BYTESTREAM_H_
-#define BYTESTREAM_H_
+#ifndef THREADSAFEBYTESTREAM_H_
+#define THREADSAFEBYTESTREAM_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
 #include "../../../public/se-lib-c/stream/IByteStream.h"
+#include <se-lib-c/osal/IMutex.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -23,7 +22,7 @@
 /******************************************************************************
  Define class handle data
 ******************************************************************************/
-typedef struct __BufferedByteStreamPrivateData* BufferedByteStreamHandle;
+typedef struct __ThreadSafeByteStreamPrivateData* ThreadSafeByteStreamHandle;
 
 /******************************************************************************
  Public functions
@@ -33,19 +32,19 @@ typedef struct __BufferedByteStreamPrivateData* BufferedByteStreamHandle;
  * @param capacity size of the buffer
  * @return
  */
-BufferedByteStreamHandle BufferedByteStream_create(size_t capacity);
+ThreadSafeByteStreamHandle ThreadSafeByteStream_create(IMutexHandle mutex, IByteStreamHandle streamToProtect);
 
 /**
  * Returns the stream interface
  * @param self
  * @return
  */
-IByteStreamHandle BufferedByteStream_getIByteStream(BufferedByteStreamHandle self);
+IByteStreamHandle ThreadSafeByteStream_getIByteStream(ThreadSafeByteStreamHandle self);
 
 /**
  * Deconstructor
  * @param self
  */
-void BufferedByteStream_destroy(BufferedByteStreamHandle self);
+void ThreadSafeByteStream_destroy(ThreadSafeByteStreamHandle self);
 
-#endif
+#endif //THREADSAFEBYTESTREAM_H_

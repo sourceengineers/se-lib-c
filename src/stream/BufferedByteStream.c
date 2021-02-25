@@ -7,7 +7,7 @@
  *
  *****************************************************************************************************************************************/
 
-#include <se-lib-c/stream/IByteStream.h>
+#include "../../public/se-lib-c/stream/IByteStream.h"
 #include <se-lib-c/stream/BufferedByteStream.h>
 #include <se-lib-c/container/ByteRingBuffer.h>
 
@@ -31,11 +31,14 @@ static bool dataIsReady(IByteStreamHandle parent)
 {
     BufferedByteStreamHandle self = (BufferedByteStreamHandle) parent->handle;
 
+    bool isDataReady = false;
+
     if(ByteRingBuffer_getNumberOfUsedData(self->buffer) > 0){
-        return true;
-    }else{
-        return false;
+    	isDataReady = true;
+    } else {
+    	isDataReady =  false;
     }
+    return isDataReady;
 }
 
 static uint8_t readData(IByteStreamHandle parent)
@@ -100,6 +103,22 @@ static size_t getCapacity(IByteStreamHandle stream)
     BufferedByteStreamHandle self = (BufferedByteStreamHandle) stream->handle;
     return ByteRingBuffer_getCapacity(self->buffer);
 }
+
+static size_t getNumberOfFreeBytes(IByteStreamHandle stream)
+{
+    BufferedByteStreamHandle self = (BufferedByteStreamHandle) stream->handle;
+    return ByteRingBuffer_getNumberOfFreeData(self->buffer);
+}
+
+
+static size_t getNumberOfUsedBytes(IByteStreamHandle stream)
+{
+    BufferedByteStreamHandle self = (BufferedByteStreamHandle) stream->handle;
+    return ByteRingBuffer_getNumberOfUsedData(self->buffer);
+}
+
+
+
 /******************************************************************************
  Public functions
 ******************************************************************************/
@@ -120,6 +139,8 @@ BufferedByteStreamHandle BufferedByteStream_create(size_t capacity)
     self->parent.write = &write;
     self->parent.flush = &flush;
     self->parent.capacity = &getCapacity;
+    self->parent.numOfFreeBytes = &getNumberOfFreeBytes;
+    self->parent.numOfUsedBytes = &getNumberOfUsedBytes;
 
     return self;
 }

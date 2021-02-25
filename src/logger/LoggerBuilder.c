@@ -4,19 +4,28 @@
  * @copyright    Copyright (c) 2019 by Sourceengineers. All Rights Reserved.
  *
  * @authors      Benjamin Rupp  benjamin.rupp@sourceengineers.com
+ * 				 Anselm Fuhrer	anselm.fuhrer@sourceengineers.com
  *
  *****************************************************************************************************************************************/
-#include <se-lib-c/logger/LoggerBuilder.h>
+
 #include <stdlib.h>
+#include <assert.h>
+#include <se-lib-c/osal/IMutex.h>
+#include <se-lib-c/logger/LoggerBuilder.h>
 
 /******************************************************************************
  Define private data
 ******************************************************************************/
 typedef struct __LoggerBuilderPrivateData{
-    IByteStreamHandle streamer;
-    LoggerHandle  logger;
-    size_t bufferSize;
+	LoggerHandle logger;
+    ThreadSafeByteStreamHandle tsLoggerBuffer;
+    BufferedByteStreamHandle loggerBuffer;
 } LoggerBuilderPrivateData;
+
+
+// the builder is a singleton
+static LoggerBuilderPrivateData me = {0};
+
 /******************************************************************************
  Private functions
 ******************************************************************************/
@@ -24,38 +33,65 @@ typedef struct __LoggerBuilderPrivateData{
 /******************************************************************************
  Public functions
 ******************************************************************************/
-LoggerBuilderHandle LoggerBuilder_create(void){
-
-    LoggerBuilderHandle self = malloc(sizeof(LoggerBuilderPrivateData));
-
-    self->logger = NULL;
-    self->streamer = NULL;
-
-    return self;
+void LoggerBuilder_create(void)
+{
+    me.logger = NULL;
+    me.tsLoggerBuffer = NULL;
+    me.loggerBuffer = NULL;
 }
 
-void LoggerBuilder_setBufferSize(LoggerBuilderHandle self, size_t bufferSize){
-    self->bufferSize = bufferSize;
+void LoggerBuilder_build(size_t logMessageSize, size_t logBufferSize){
+	// build logger-buffer without mutex
+	me.loggerBuffer = BufferedByteStream_create(logBufferSize);
+	assert(me.loggerBuffer);
+	// build logger on top of logger-buffer
+	IByteStream* byteStream = BufferedByteStream_getIByteStream(me.loggerBuffer);
+	assert(byteStream);
+    me.logger = Logger_create(logMessageSize, byteStream);
+	assert(me.logger);
 }
 
-LoggerObject LoggerBuilder_build(LoggerBuilderHandle self){
+void LoggerBuilder_buildThreadSafe(size_t logMessageSize, size_t logBufferSize,  IMutexHandle mutex)
+{
+	assert(mutex);
 
-    LoggerObject obj;
+	me.loggerBuffer = BufferedByteStream_create(logBufferSize);
+	assert(me.loggerBuffer);
 
-    //self->logger = Logger_create( self->bufferSize );
-    obj.logger = Logger_getILogger(self->logger);
+	IByteStream* byteStream = BufferedByteStream_getIByteStream(me.loggerBuffer);
+	assert(byteStream);
 
-    return  obj;
+	me.tsLoggerBuffer = ThreadSafeByteStream_create(mutex, byteStream);
+    assert(me.tsLoggerBuffer);
+
+    byteStream = ThreadSafeByteStream_getIByteStream(me.tsLoggerBuffer);
+    assert(byteStream);
+
+	me.logger = Logger_create(logMessageSize, byteStream);
+	assert(me.logger);
 }
 
-char* LoggerBuilder_getBuffer(LoggerBuilderHandle self){
-    return Logger_getBuffer(self->logger);
+
+IByteStreamHandle LoggerBuilder_getILoggerBufferHandle()
+{
+	assert(me.loggerBuffer);
+
+	IByteStream* byteStream = NULL;
+	if(me.tsLoggerBuffer)
+	{
+		byteStream = ThreadSafeByteStream_getIByteStream(me.tsLoggerBuffer);
+	}
+	else
+	{
+		byteStream = BufferedByteStream_getIByteStream(me.loggerBuffer);
+	}
+
+	return byteStream;
 }
 
-void LoggerBuilder_destroy(LoggerBuilderHandle self){
-    LoggerDestroy(self->logger);
+ILoggerHandle LoggerBuilder_getILoggerHandle()
+{
+	assert(me.logger);
+	return Logger_getILogger(me.logger);
 }
 
-void LoggerBuilder_setStream(LoggerBuilderHandle self, IByteStreamHandle streamer){
-    self->streamer = streamer;
-}
