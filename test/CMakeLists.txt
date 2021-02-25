@@ -1,8 +1,6 @@
-
 set(SE_LIB_C_TEST ${SE_LIB_C}-test)
 
 project(${SE_LIB_C_TEST})
-
 
 include(cmake/UnitTestFiles.cmake)
 
