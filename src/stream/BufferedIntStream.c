@@ -9,7 +9,7 @@
 
 #include <se-lib-c/stream/BufferedIntStream.h>
 #include <se-lib-c/container/IntRingBuffer.h>
-#include "../../public/se-lib-c/stream/IIntStream.h"
+#include <se-lib-c/stream/IIntStream.h>
 
 #include <stdlib.h>
 #include <assert.h>

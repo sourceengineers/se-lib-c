@@ -12,7 +12,7 @@
 #ifndef MOCKBYTESTREAM_H_
 #define MOCKBYTESTREAM_H_
 
-#include "../../public/se-lib-c/stream/IByteStream.h"
+#include <se-lib-c/stream/IByteStream.h>
 #include <stdint.h>
 
 #define STRING_BUFFER_SIZE 256

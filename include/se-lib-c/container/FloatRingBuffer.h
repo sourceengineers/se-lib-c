@@ -12,7 +12,7 @@
 #ifndef FLOATRINGBUFFER_H_
 #define FLOATRINGBUFFER_H_
 
-#include "../../../public/se-lib-c/stream/IFloatStream.h"
+#include <se-lib-c/stream/IFloatStream.h>
 #include <stddef.h>
 
 /******************************************************************************
