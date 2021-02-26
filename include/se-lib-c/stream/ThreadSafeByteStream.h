@@ -13,7 +13,7 @@
 #define THREADSAFEBYTESTREAM_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
-#include "../../../public/se-lib-c/stream/IByteStream.h"
+#include <se-lib-c/stream/IByteStream.h>
 #include <se-lib-c/osal/IMutex.h>
 #include <stdbool.h>
 #include <stddef.h>

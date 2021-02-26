@@ -13,7 +13,7 @@
 #define BYTERINGBUFFER_H_
 
 #include <se-lib-c/definition/SeLibCTypes.h>
-#include "../../../public/se-lib-c/stream/IByteStream.h"
+#include <se-lib-c/stream/IByteStream.h>
 
 #include <stddef.h>
 #include <stdint.h>

@@ -13,7 +13,7 @@
 #define SE_SCOPE_LOGGERBUILDER_H
 
 #include <se-lib-c/logger/Logger.h>
-#include "../../../public/se-lib-c/stream/IByteStream.h"
+#include <se-lib-c/stream/IByteStream.h>
 #include <se-lib-c/stream/BufferedByteStream.h>
 #include <se-lib-c/stream/ThreadSafeByteStream.h>
 
