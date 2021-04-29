@@ -78,16 +78,17 @@ static int increasePriority(IntRingBufferHandle higherPriority, IntRingBufferHan
 
 static void updateAgePastPriority(AgingPriorityQueueHandle self, uint32_t updatePast) {
 
-    if (updatePast >= self->maxPriorities) {
+    // Don't update if the last priority got poped
+    if (updatePast >= (self->maxPriorities - 1)) {
         return;
     }
 
     // Start checking if the priorities must be raised
-    for (size_t i = updatePast; i < (self->maxPriorities - 1); ++i) {
+    for (size_t i = updatePast; i < (self->maxPriorities - 2); ++i) {
         self->ages[i] += 1;
 
         if (self->ages[i] >= self->oldestAge) {
-            increasePriority(self->queues[i + 1], self->queues[i + 1]);
+            increasePriority(self->queues[i], self->queues[i + 1]);
             // Reset the age
             self->ages[i] = 0;
         }
