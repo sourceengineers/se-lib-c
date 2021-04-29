@@ -58,17 +58,25 @@ static int increasePriority(IntRingBufferHandle higherPriority, IntRingBufferHan
 static int increasePriority(IntRingBufferHandle higherPriority, IntRingBufferHandle lowerPriority) {
 
     size_t numberOfItems = IntRingBuffer_getNumberOfUsedData(lowerPriority);
+    size_t numberOfItemsThatFit = IntRingBuffer_getNumberOfFreeData(higherPriority);
+
+    // Make sure that all the items are going to fit, so that we are not going to loose data
+    if (numberOfItemsThatFit < numberOfItems) {
+        numberOfItems = numberOfItemsThatFit;
+    }
 
     for (int i = 0; i < numberOfItems; ++i) {
 
         uint32_t item;
 
         if (IntRingBuffer_read(lowerPriority, &item, 1) < 0) {
+            // If we couldn't read anymore for some reason, abort
             return -1;
         }
 
         if (IntRingBuffer_write(higherPriority, &item, 1) < 0) {
-            return -1;
+            // If we couldn't fit the data for what ever reason, put it back into the original
+            IntRingBuffer_write(lowerPriority, &item, 1);
         }
     }
 

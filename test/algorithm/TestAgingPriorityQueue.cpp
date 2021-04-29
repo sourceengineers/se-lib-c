@@ -125,7 +125,9 @@ TEST_F(TestAgingPriorityQueue, OrdinaryOperationButMoreDifficult)
     EXPECT_EQ(8, item);
     EXPECT_NE(-1, ret);
     ret = AgingPriorityQueue_pop(_priorityQueue, &item);
-    // There's a aging occuring, so flipp 10/9
+    // 10 was put in, and then "aged" into prio 2 before 9 was pushed into it. So they are flipped here
+    EXPECT_EQ(10, item);
+    EXPECT_NE(-1, ret);
     ret = AgingPriorityQueue_pop(_priorityQueue, &item);
     EXPECT_EQ(9, item);
     EXPECT_NE(-1, ret);
