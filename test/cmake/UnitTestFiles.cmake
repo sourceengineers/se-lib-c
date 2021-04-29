@@ -17,6 +17,7 @@ set(SE_LIB_C_UNIT_TESTS
         ${SE_LIB_C_TEST_DIR}/monitoring/TestMinCheck.cpp
         ${SE_LIB_C_TEST_DIR}/stream/Bytestream-test.cpp
         ${SE_LIB_C_TEST_DIR}/stream/Bytestream-test.cpp
+        ${SE_LIB_C_TEST_DIR}/algorithm/TestAgingPriorityQueue.cpp
         ${SE_LIB_C_TEST_DIR}/UnitTests.cpp
         ${SE_LIB_C_TEST_DIR}/util/runnable/TestRunnableList.cpp
         )
