@@ -99,10 +99,23 @@ typedef struct IByteStreamStruct{
     void (* flush)(IByteStreamHandle self);
 
     /**
-     * Returns the maximum amount of data that can be safed in the stream
+     * Returns the maximum amount of data that can be saved in the stream
      * @param self
      */
     size_t (* capacity)(IByteStreamHandle self);
+
+
+    /**
+     * Returns the amount of free data in tue buffer
+     * @param self
+     */
+    size_t (* numOfFreeBytes)(IByteStreamHandle self);
+
+    /**
+     * Returns the amount of used data in tue buffer
+     * @param self
+     */
+    size_t (* numOfUsedBytes)(IByteStreamHandle self);
 
 } IByteStream;
 
