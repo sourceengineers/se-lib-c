@@ -27,8 +27,8 @@
  *
  * @brief        Implementation of a priority queue with an aging mechanism to prevent starvation
  *               See: https://en.wikipedia.org/wiki/Aging_(scheduling)
- *
- *               Note: Perhaps this makes sense to implement: https://gitlab.com/hansonry/guide-to-ursa-major/-/blob/master/backend/common/Queue.h
+ *               This module will take up
+ *               (maxPriorities * maxItemsPerPriority + maxPriorities) of space
  *
  ******************************************************************************/
 
@@ -46,9 +46,12 @@ typedef struct __AgingPriorityQueuePrivateData* AgingPriorityQueueHandle;
 /******************************************************************************
  Public functions
 ******************************************************************************/
+
 /**
- * Constructor
- * @param capacity
+ * Create the aging priority queue
+ * @param maxPriorities Max number of priorities (highest number is lowest priority)
+ * @param maxItemsPerPriority Max items that will be saved in the queue per priority
+ * @param oldestAge The oldest age of a priority before its priority gets elevated
  * @return
  */
 AgingPriorityQueueHandle AgingPriorityQueue_create(uint32_t maxPriorities, uint32_t maxItemsPerPriority,
@@ -58,7 +61,7 @@ AgingPriorityQueueHandle AgingPriorityQueue_create(uint32_t maxPriorities, uint3
  * Pushes a new item into the priority queue.
  * @param self
  * @param item
- * @param priority
+ * @param priority Note, lower number is higher priority
  * @return -1 when the queue is full or the priority > maxPriorities. 1 is returned on success
  */
 int AgingPriorityQueue_push(AgingPriorityQueueHandle self, uint32_t item, uint32_t priority);

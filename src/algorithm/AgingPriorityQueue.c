@@ -27,9 +27,8 @@
  *
  * @brief        Implementation of a priority queue with an aging mechanism to prevent starvation
  *               See: https://en.wikipedia.org/wiki/Aging_(scheduling)
- *
- *               Note: Perhaps this makes sense to implement: https://gitlab.com/hansonry/guide-to-ursa-major/-/blob/master/backend/common/Queue.h
- *
+ *               This module will take up
+ *               (maxPriorities * maxItemsPerPriority + maxPriorities) of space
  ******************************************************************************/
 
 #include <se-lib-c/algorithm//AgingPriorityQueue.h>
