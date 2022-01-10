@@ -45,18 +45,18 @@ typedef struct __ByteRingBufferPrivateData{
 } ByteRingBufferPrivateData;
 
 /* Returns the next index of the given index */
-static uint8_t* nextIndex(ByteRingBufferHandle self, uint8_t* index);
+inline static uint8_t* nextIndex(ByteRingBufferHandle self, uint8_t* index);
 
 /* Increments the tail index */
-static bool incTail(ByteRingBufferHandle self);
+inline static bool incTail(ByteRingBufferHandle self);
 
 /* Increments the head index */
-static bool incHead(ByteRingBufferHandle self);
+inline static bool incHead(ByteRingBufferHandle self);
 
 /******************************************************************************
  Private functions
 ******************************************************************************/
-static uint8_t* nextIndex(ByteRingBufferHandle self, uint8_t* index){
+inline static uint8_t* nextIndex(ByteRingBufferHandle self, uint8_t* index){
     const uint32_t positionRelative = ((index + 1) - self->data);
     return (positionRelative % self->capacity) + self->data;
 }
@@ -107,11 +107,11 @@ size_t ByteRingBuffer_getCapacity(ByteRingBufferHandle self){
     return self->capacity - 1;
 }
 
-size_t ByteRingBuffer_getNumberOfFreeData(ByteRingBufferHandle self){
+inline size_t ByteRingBuffer_getNumberOfFreeData(ByteRingBufferHandle self){
     return (size_t) (self->capacity - (ByteRingBuffer_getNumberOfUsedData(self))) - 1;
 }
 
-size_t ByteRingBuffer_getNumberOfUsedData(ByteRingBufferHandle self){
+inline size_t ByteRingBuffer_getNumberOfUsedData(ByteRingBufferHandle self){
 
     const size_t absSize = (self->head >= self->tail) ?
                            (self->head - self->tail) :
