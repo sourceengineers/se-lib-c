@@ -165,6 +165,12 @@ BufferedByteStreamHandle BufferedByteStream_create(size_t capacity)
     return self;
 }
 
+ByteRingBufferHandle BufferedByteStream_getByteRingBufferHandle(BufferedByteStreamHandle self) {
+    assert(self);
+    return self->buffer;
+}
+
+
 void BufferedByteStream_destroy(BufferedByteStreamHandle self)
 {
     ByteRingBuffer_destroy(self->buffer);
