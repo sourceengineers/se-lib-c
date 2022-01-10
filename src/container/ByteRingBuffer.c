@@ -107,11 +107,11 @@ size_t ByteRingBuffer_getCapacity(ByteRingBufferHandle self){
     return self->capacity - 1;
 }
 
-inline size_t ByteRingBuffer_getNumberOfFreeData(ByteRingBufferHandle self){
+size_t ByteRingBuffer_getNumberOfFreeData(ByteRingBufferHandle self){
     return (size_t) (self->capacity - (ByteRingBuffer_getNumberOfUsedData(self))) - 1;
 }
 
-inline size_t ByteRingBuffer_getNumberOfUsedData(ByteRingBufferHandle self){
+size_t ByteRingBuffer_getNumberOfUsedData(ByteRingBufferHandle self){
 
     const size_t absSize = (self->head >= self->tail) ?
                            (self->head - self->tail) :
