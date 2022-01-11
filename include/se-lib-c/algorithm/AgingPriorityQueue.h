@@ -37,6 +37,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /******************************************************************************
  Define class handle data
@@ -56,7 +57,6 @@ typedef struct __AgingPriorityQueuePrivateData* AgingPriorityQueueHandle;
  */
 AgingPriorityQueueHandle AgingPriorityQueue_create(uint32_t maxPriorities, uint32_t maxItemsPerPriority,
                                                    uint32_t oldestAge);
-
 /**
  * Pushes a new item into the priority queue.
  * @param self
@@ -72,6 +72,14 @@ int AgingPriorityQueue_push(AgingPriorityQueueHandle self, uint32_t item, uint32
  * @return
  */
 int AgingPriorityQueue_pop(AgingPriorityQueueHandle self, uint32_t* item);
+
+/**
+ * Check if the given item is already present in the priority queue. Returns true if already present
+ * @param self
+ * @param item
+ * @return
+ */
+bool AgingPriorityQueue_any(AgingPriorityQueueHandle self, uint32_t item);
 
 /**
  * Deconstructor

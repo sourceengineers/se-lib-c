@@ -62,6 +62,55 @@ TEST_F(TestAgingPriorityQueue, OrdinaryOperation) {
     EXPECT_EQ(-1, ret);
 }
 
+TEST_F(TestAgingPriorityQueue, Any) {
+
+    int ret = AgingPriorityQueue_push(_priorityQueue, 1, 3);
+    EXPECT_NE(-1, ret);
+
+    ret = AgingPriorityQueue_push(_priorityQueue, 1, 1);
+    EXPECT_NE(-1, ret);
+
+    ret = AgingPriorityQueue_push(_priorityQueue, 2, 4);
+    EXPECT_NE(-1, ret);
+
+    ret = AgingPriorityQueue_push(_priorityQueue, 4, 1);
+    EXPECT_NE(-1, ret);
+
+    // Check if the "any" operation returns the correct values
+    bool some = AgingPriorityQueue_any(_priorityQueue, 1);
+    EXPECT_TRUE(some);
+
+    some = AgingPriorityQueue_any(_priorityQueue, 2);
+    EXPECT_TRUE(some);
+
+    some = AgingPriorityQueue_any(_priorityQueue, 3);
+    EXPECT_FALSE(some);
+
+    some = AgingPriorityQueue_any(_priorityQueue, 4);
+    EXPECT_TRUE(some);
+
+    // make sure none of the values was deleted by accident
+    uint32_t item;
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(1, item);
+    EXPECT_NE(-1, ret);
+
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(4, item);
+    EXPECT_NE(-1, ret);
+
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(1, item);
+    EXPECT_NE(-1, ret);
+
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(2, item);
+    EXPECT_NE(-1, ret);
+
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(-1, ret);
+}
+
 TEST_F(TestAgingPriorityQueue, OrdinaryOperationButMoreDifficult)
 {
 
@@ -167,7 +216,7 @@ TEST_F(TestAgingPriorityQueue, Aging) {
 
     uint32_t item;
 
-    // After poping three times, we expect the priority of prio 1 elements to be raise
+    // After popping three times, we expect the priority of prio 1 elements to be raised
     ret = AgingPriorityQueue_pop(_priorityQueue, &item);
     EXPECT_EQ(1, item);
     EXPECT_NE(-1, ret);
@@ -200,10 +249,4 @@ TEST_F(TestAgingPriorityQueue, Aging) {
     ret = AgingPriorityQueue_pop(_priorityQueue, &item);
     EXPECT_EQ(1, item);
     EXPECT_NE(-1, ret);
-
-
-
-
-
-
 }

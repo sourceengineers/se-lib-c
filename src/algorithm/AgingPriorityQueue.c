@@ -31,7 +31,7 @@
  *               (maxPriorities * maxItemsPerPriority + maxPriorities) of space
  ******************************************************************************/
 
-#include <se-lib-c/algorithm//AgingPriorityQueue.h>
+#include <se-lib-c/algorithm/AgingPriorityQueue.h>
 #include <se-lib-c/container/IntRingBuffer.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -120,7 +120,7 @@ AgingPriorityQueueHandle AgingPriorityQueue_create(uint32_t maxPriorities, uint3
     assert(self->queues);
 
     // The highest priority cannot age since it is already at the max priority.
-    // Therefore one less age than priority is required
+    // Therefor one less age than priority is required
     self->ages = malloc(sizeof(uint32_t) * (maxPriorities - 1));
     assert(self->ages);
 
@@ -134,6 +134,21 @@ AgingPriorityQueueHandle AgingPriorityQueue_create(uint32_t maxPriorities, uint3
     self->maxPriorities = maxPriorities;
 
     return self;
+}
+
+bool AgingPriorityQueue_any(AgingPriorityQueueHandle self, uint32_t item) {
+    for (size_t i = 0; i < self->maxPriorities; ++i) {
+        size_t elements = IntRingBuffer_getNumberOfUsedData(self->queues[i]);
+        for (int j = 0; j < elements; ++j) {
+            uint32_t tmpItem = 0;
+            IntRingBuffer_readNoPosInc(self->queues[i], &tmpItem, 1);
+            if (tmpItem == item) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 int AgingPriorityQueue_push(AgingPriorityQueueHandle self, uint32_t item, uint32_t priority) {
@@ -150,7 +165,7 @@ int AgingPriorityQueue_pop(AgingPriorityQueueHandle self, uint32_t* item) {
     bool itemFound = false;
     size_t priority = 0;
 
-    for (priority; priority < self->maxPriorities; ++priority) {
+    for (; priority < self->maxPriorities; ++priority) {
         if(IntRingBuffer_getNumberOfUsedData(self->queues[priority]) > 0) {
             if (IntRingBuffer_read(self->queues[priority], &tmpItem, 1) < 0) {
                 return -1;
