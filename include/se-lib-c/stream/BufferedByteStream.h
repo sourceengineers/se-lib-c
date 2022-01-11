@@ -36,6 +36,7 @@
 
 #include <se-lib-c/definition/SeLibCTypes.h>
 #include <se-lib-c/stream/IByteStream.h>
+#include <se-lib-c/container/ByteRingBuffer.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -61,6 +62,14 @@ BufferedByteStreamHandle BufferedByteStream_create(size_t capacity);
  * @return
  */
 IByteStreamHandle BufferedByteStream_getIByteStream(BufferedByteStreamHandle self);
+
+/**
+ * Returns the underlying ByteRungBufferHandle. Use this only if you have to do fast operations on the
+ * buffer itself.
+ * @param self
+ * @return
+ */
+ByteRingBufferHandle BufferedByteStream_getByteRingBufferHandle(BufferedByteStreamHandle self);
 
 /**
  * Deconstructor
