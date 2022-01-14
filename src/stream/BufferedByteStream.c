@@ -150,7 +150,7 @@ BufferedByteStreamHandle BufferedByteStream_create(size_t capacity)
 
     self->buffer = ByteRingBuffer_create(capacity);
 
-    self->parent.handle = self;
+    self->parent.handle = (IByteStreamHandle) self;
     self->parent.byteIsReady = &dataIsReady;
     self->parent.readByte = &readData;
     self->parent.length = &streamLength;
