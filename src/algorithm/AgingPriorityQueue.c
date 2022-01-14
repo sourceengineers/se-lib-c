@@ -45,6 +45,7 @@ typedef struct __AgingPriorityQueuePrivateData{
     uint32_t maxPriorities;
     uint32_t* ages;
     uint32_t oldestAge;
+    uint32_t* anySearchBuffer;
 } AgingPriorityQueuePrivateData;
 
 static void updateAgePastPriority(AgingPriorityQueueHandle self, uint32_t updatePast);
@@ -124,6 +125,9 @@ AgingPriorityQueueHandle AgingPriorityQueue_create(uint32_t maxPriorities, uint3
     self->ages = malloc(sizeof(uint32_t) * (maxPriorities - 1));
     assert(self->ages);
 
+    self->anySearchBuffer = malloc(sizeof(uint32_t) * (maxItemsPerPriority));
+    assert(self->anySearchBuffer);
+
     for (size_t i = 0; i < maxPriorities; ++i) {
         self->queues[i] = IntRingBuffer_create(maxItemsPerPriority);
         assert(self->queues[i]);
@@ -139,10 +143,9 @@ AgingPriorityQueueHandle AgingPriorityQueue_create(uint32_t maxPriorities, uint3
 bool AgingPriorityQueue_any(AgingPriorityQueueHandle self, uint32_t item) {
     for (size_t i = 0; i < self->maxPriorities; ++i) {
         size_t elements = IntRingBuffer_getNumberOfUsedData(self->queues[i]);
+        IntRingBuffer_readNoPosInc(self->queues[i], self->anySearchBuffer, elements);
         for (int j = 0; j < elements; ++j) {
-            uint32_t tmpItem = 0;
-            IntRingBuffer_readNoPosInc(self->queues[i], &tmpItem, 1);
-            if (tmpItem == item) {
+            if (self->anySearchBuffer[j] == item) {
                 return true;
             }
         }
