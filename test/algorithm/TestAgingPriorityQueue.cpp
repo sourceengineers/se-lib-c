@@ -62,7 +62,7 @@ TEST_F(TestAgingPriorityQueue, OrdinaryOperation) {
     EXPECT_EQ(-1, ret);
 }
 
-TEST_F(TestAgingPriorityQueue, Any) {
+TEST_F(TestAgingPriorityQueue, contains) {
 
     int ret = AgingPriorityQueue_push(_priorityQueue, 1, 3);
     EXPECT_NE(-1, ret);
@@ -76,17 +76,17 @@ TEST_F(TestAgingPriorityQueue, Any) {
     ret = AgingPriorityQueue_push(_priorityQueue, 4, 1);
     EXPECT_NE(-1, ret);
 
-    // Check if the "any" operation returns the correct values
-    bool some = AgingPriorityQueue_any(_priorityQueue, 1);
+    // Check if the "contains" operation returns the correct values
+    bool some = AgingPriorityQueue_contains(_priorityQueue, 1);
     EXPECT_TRUE(some);
 
-    some = AgingPriorityQueue_any(_priorityQueue, 2);
+    some = AgingPriorityQueue_contains(_priorityQueue, 2);
     EXPECT_TRUE(some);
 
-    some = AgingPriorityQueue_any(_priorityQueue, 3);
+    some = AgingPriorityQueue_contains(_priorityQueue, 3);
     EXPECT_FALSE(some);
 
-    some = AgingPriorityQueue_any(_priorityQueue, 4);
+    some = AgingPriorityQueue_contains(_priorityQueue, 4);
     EXPECT_TRUE(some);
 
     // make sure none of the values was deleted by accident

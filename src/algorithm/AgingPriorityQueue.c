@@ -140,7 +140,7 @@ AgingPriorityQueueHandle AgingPriorityQueue_create(uint32_t maxPriorities, uint3
     return self;
 }
 
-bool AgingPriorityQueue_any(AgingPriorityQueueHandle self, uint32_t item) {
+bool AgingPriorityQueue_contains(AgingPriorityQueueHandle self, uint32_t item) {
     for (size_t i = 0; i < self->maxPriorities; ++i) {
         size_t elements = IntRingBuffer_getNumberOfUsedData(self->queues[i]);
         IntRingBuffer_readNoPosInc(self->queues[i], self->anySearchBuffer, elements);
@@ -160,6 +160,17 @@ int AgingPriorityQueue_push(AgingPriorityQueueHandle self, uint32_t item, uint32
     }
 
     return IntRingBuffer_write(self->queues[priority], &item, 1);
+}
+
+bool AgingPriorityQueue_empty(AgingPriorityQueueHandle self) {
+
+    for (int i = 0; i < self->maxPriorities; ++i) {
+        if (IntRingBuffer_getNumberOfUsedData(self->queues[i]) != 0) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 int AgingPriorityQueue_pop(AgingPriorityQueueHandle self, uint32_t* item) {

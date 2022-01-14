@@ -79,7 +79,14 @@ int AgingPriorityQueue_pop(AgingPriorityQueueHandle self, uint32_t* item);
  * @param item
  * @return
  */
-bool AgingPriorityQueue_any(AgingPriorityQueueHandle self, uint32_t item);
+bool AgingPriorityQueue_contains(AgingPriorityQueueHandle self, uint32_t item);
+
+/**
+ * Checks if the queue is empty and no items are pending. Returns true if the queue is empty
+ * @param self
+ * @return
+ */
+bool AgingPriorityQueue_empty(AgingPriorityQueueHandle self);
 
 /**
  * Deconstructor
