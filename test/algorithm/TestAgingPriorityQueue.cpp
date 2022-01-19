@@ -62,6 +62,37 @@ TEST_F(TestAgingPriorityQueue, OrdinaryOperation) {
     EXPECT_EQ(-1, ret);
 }
 
+TEST_F(TestAgingPriorityQueue, Empty) {
+
+    int ret = AgingPriorityQueue_push(_priorityQueue, 1, 1);
+    EXPECT_NE(-1, ret);
+
+    ret = AgingPriorityQueue_push(_priorityQueue, 2, 2);
+    EXPECT_NE(-1, ret);
+
+    uint32_t item;
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(1, item);
+    EXPECT_NE(-1, ret);
+
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(2, item);
+    EXPECT_NE(-1, ret);
+
+    item = 0;
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(-1, ret);
+    EXPECT_EQ(0, item);
+
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(-1, ret);
+    EXPECT_EQ(0, item);
+
+    ret = AgingPriorityQueue_pop(_priorityQueue, &item);
+    EXPECT_EQ(-1, ret);
+    EXPECT_EQ(0, item);
+}
+
 TEST_F(TestAgingPriorityQueue, contains) {
 
     int ret = AgingPriorityQueue_push(_priorityQueue, 1, 3);

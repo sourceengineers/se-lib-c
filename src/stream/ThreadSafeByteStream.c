@@ -75,7 +75,7 @@ static bool byteIsReady(IByteStreamHandle self)
 static uint8_t readByte(IByteStreamHandle self)
 {
 	ThreadSafeByteStreamPrivateData* me = (ThreadSafeByteStreamPrivateData*)self->handle;
-	uint8_t readValue;
+	uint8_t readValue = 0;
 	if(me->mutex->lock(me->mutex, 0xFFF))
 	{
 		readValue = me->composite->readByte(me->composite);

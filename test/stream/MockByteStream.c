@@ -43,7 +43,11 @@ bool mockWrite(IByteStreamHandle handle, const uint8_t* data, const size_t lengt
         strcpy(me->stringBuffer, data);
         return true;
     }
+}
 
+
+bool isByteReay(IByteStreamHandle handle) {
+    return length(handle) > 0;
 }
 
 /**
@@ -59,7 +63,7 @@ void MockByteStream_init(MockByteStream* me)
     // initialize interface
     me->parent.handle = &me;
 
-    me->parent.byteIsReady = NULL;
+    me->parent.byteIsReady = &isByteReay;
     me->parent.readByte = NULL;
     me->parent.length = length;
     me->parent.read = NULL;
