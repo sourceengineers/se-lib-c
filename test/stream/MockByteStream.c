@@ -50,6 +50,12 @@ bool isByteReay(IByteStreamHandle handle) {
     return length(handle) > 0;
 }
 
+
+void flush(IByteStreamHandle handle) {
+    MockByteStream* me = (MockByteStream*)handle;
+    strcpy(me->stringBuffer, "");
+}
+
 /**
  * The implementation of the Parent methods.
  * @{
@@ -61,7 +67,7 @@ bool isByteReay(IByteStreamHandle handle) {
 void MockByteStream_init(MockByteStream* me)
 {
     // initialize interface
-    me->parent.handle = &me;
+    me->parent.handle = me;
 
     me->parent.byteIsReady = &isByteReay;
     me->parent.readByte = NULL;
@@ -69,7 +75,7 @@ void MockByteStream_init(MockByteStream* me)
     me->parent.read = NULL;
     me->parent.writeByte = NULL;
     me->parent.write = &mockWrite;
-    me->parent.flush = NULL;
+    me->parent.flush = &flush;
     me->parent.capacity = NULL;
 
     // initialize private variables
