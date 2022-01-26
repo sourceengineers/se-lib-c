@@ -14,6 +14,12 @@
 #include <stdint.h>
 #include <string.h>
 
+static size_t length(IByteStreamHandle handle)
+{
+    assert(handle != NULL);
+    MockByteStream* me = (MockByteStream*)handle;
+    return strlen(me->stringBuffer);
+}
 
 bool mockWrite(IByteStreamHandle handle, const uint8_t* data, const size_t length)
 {
@@ -37,7 +43,11 @@ bool mockWrite(IByteStreamHandle handle, const uint8_t* data, const size_t lengt
         strcpy(me->stringBuffer, data);
         return true;
     }
+}
 
+
+bool isByteReay(IByteStreamHandle handle) {
+    return length(handle) > 0;
 }
 
 /**
@@ -53,9 +63,9 @@ void MockByteStream_init(MockByteStream* me)
     // initialize interface
     me->parent.handle = &me;
 
-    me->parent.byteIsReady = NULL;
+    me->parent.byteIsReady = &isByteReay;
     me->parent.readByte = NULL;
-    me->parent.length = NULL;
+    me->parent.length = length;
     me->parent.read = NULL;
     me->parent.writeByte = NULL;
     me->parent.write = &mockWrite;
