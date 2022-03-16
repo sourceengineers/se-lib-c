@@ -27,20 +27,16 @@ add_library(se-lib::c::mock ALIAS ${SE_LIB_C_MOCKS})
 target_link_libraries(${SE_LIB_C_MOCKS} INTERFACE se-lib::c::mock)
 target_include_directories(${SE_LIB_C_MOCKS} PUBLIC .)
 
-target_link_libraries(
-        ${SE_LIB_C_MOCKS}
-        PRIVATE
-        se-lib::c)
+target_link_libraries(${SE_LIB_C_MOCKS} PRIVATE se-lib::c)
 
 #######################################################################################################################
 # Add tests
 #######################################################################################################################
-add_executable(${SE_LIB_C_TEST}
-        ${SE_LIB_C_UNIT_TESTS})
+add_executable(${SE_LIB_C_TEST} ${SE_LIB_C_UNIT_TESTS})
 
-target_compile_options(${SE_LIB_C} PUBLIC -DUNIT_TEST --coverage)
+target_compile_options(${SE_LIB_C_TEST} PRIVATE -DUNIT_TEST --coverage)
+target_link_options(${SE_LIB_C_TEST} PRIVATE --coverage)
 target_include_directories(${SE_LIB_C_TEST} PRIVATE .)
-
 
 target_link_libraries(
         ${SE_LIB_C_TEST}
@@ -48,4 +44,4 @@ target_link_libraries(
         se-lib::c
         test::gtest
         se-lib::c::mock)
-target_link_options(${SE_LIB_C} PUBLIC --coverage)
+
