@@ -3,6 +3,13 @@ set(SE_LIB_C_MOCKS ${SE_LIB_C}-mocks)
 
 project(${SE_LIB_C_TEST})
 
+# Enable testing for this project
+enable_testing()
+
+# Set the source dir
+set(SE_LIB_C_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Include all test files
 include(cmake/UnitTestFiles.cmake)
 
 if(NOT TARGET gtest)
