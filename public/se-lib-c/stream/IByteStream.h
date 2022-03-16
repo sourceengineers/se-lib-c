@@ -45,7 +45,7 @@ typedef struct IByteStreamStruct* IByteStreamHandle;
  Define interface
 ******************************************************************************/
 typedef struct IByteStreamStruct{
-    IByteStreamHandle handle;
+    SeLibGenericReferece handle;
 
     /**
      * Checks if data is pending
